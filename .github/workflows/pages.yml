@@ -3,6 +3,10 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  schedule:
+    # 매일 07:05 KST(22:05 UTC) 재빌드 → 전날 작업 글 예약 게시.
+    # 미래 시각(date) 글은 그 시각이 지난 뒤 빌드가 한 번 더 돌아야 공개되므로 필수.
+    - cron: "5 22 * * *"
 permissions:
   contents: read
   pages: write
