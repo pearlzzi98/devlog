@@ -7,6 +7,7 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 ## 배포·빌드
 
 - **배포**: `main`에 push하면 `.github/` CI가 Hugo 빌드 → GitHub Pages 공개. (피처 브랜치 push는 배포 안 됨)
+- **예약 게시용 일일 재빌드**: 같은 워크플로에 `schedule` cron(`5 22 * * *` = 07:05 KST)이 걸려 있어 매일 한 번 재빌드한다. 미래 시각(다음날 07:00) 글은 push가 없어도 이 cron으로 시각이 지난 뒤 공개된다(cron 없을 땐 push 없으면 영영 누락됐음).
 - **로컬 빌드**: `git submodule update --init`(PaperMod 테마) 후 `hugo`(extended, ≥ 0.146). 산출물 `public/`은 `.gitignore`.
 - **글 생성**: `archetypes/posts.md` 기반.
 
@@ -16,7 +17,7 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 - 그날 작업한 프로젝트는 본문 `## <repo>` 섹션으로, front-matter `projects: [...]` 배열과 1:1.
 - `projects` taxonomy 활성(`hugo.toml`) → `/projects/<repo>/`에서 프로젝트별 시간순 모아보기.
 - **게시 시각 규칙**: 파일명/제목은 **작업한 날**(`YYYY-MM-DD`), front-matter `date`(=게시 시각)는 그 **다음날 07:00 KST**(`<작업일+1>T07:00:00+09:00`). 즉 그날의 회고는 다음날 아침 7시에 올라간다.
-- 과거 작업 백필도 같은 규칙. 게시일이 미래면 빌드에서 자동 제외(오늘 작업분은 내일 07:00에 공개됨).
+- 과거 작업 백필도 같은 규칙. 게시일이 미래면 빌드에서 자동 제외되고, 그 시각이 지난 뒤 일일 cron 재빌드(위 "배포·빌드")로 공개된다(오늘 작업분은 내일 07:00에 공개됨).
 
 ## 글쓰기 보이스
 
