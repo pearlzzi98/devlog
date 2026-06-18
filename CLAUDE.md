@@ -15,10 +15,17 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 
 확정 전 구조·글을 모바일/PC에서 눈으로 보고 결정할 때 쓴다.
 
+- **필요할 때만 켠다(on-demand).** 오래 띄워두지 않는다 — 설정(`hugo.toml`) 변경은 핫리로드가 안 돼 재시작해야 하고, 장수 서버는 옛 설정으로 도는 stale 상태(=화면 깨짐)를 부른다. 검토할 때 새로 띄우고, 끝나면 내린다.
 - 준비: `git submodule update --init`(PaperMod) + hugo extended 설치(snap `--channel=extended`, ≥0.146 — apt 버전은 낡아 안 됨).
-- 띄우기: `hugo server --bind <tailscale-IP> --baseURL http://<tailscale-IP>:1313/ --appendPort=false --port 1313`. 테일넷의 모바일/PC에서 그 URL로 접속(상대 기기도 Tailscale ON 필요).
+- 띄우기(이 명령 그대로):
+  ```
+  hugo server --bind <tailscale-IP> --baseURL "http://<tailscale-IP>:1313/devlog/" --appendPort=false --port 1313 --disableFastRender
+  ```
+  접속은 **반드시 `http://<tailscale-IP>:1313/devlog/`** (경로 포함). 테일넷의 모바일/PC는 상대 기기도 Tailscale ON 필요.
+- ⚠️ **baseURL 경로 함정**: 이 hugo 버전은 config `baseURL`의 `/devlog/` 경로를 server에서 못 뗀다. 루트(`http://<ip>:1313/`)로 띄우거나 접속하면 CSS·링크가 `/devlog/...`로 나가 전부 404 → **화면 깨짐**. 그래서 `--baseURL`도 접속 주소도 `/devlog/`로 맞춘다.
+- 설정·레이아웃을 고쳤으면 **서버를 재시작**한다(콘텐츠 .md만 고쳤으면 자동 리빌드 OK).
 - **노출은 반드시 테일넷 IP에만 바인딩**한다. `0.0.0.0`·공개 인터페이스 바인딩, 공개 URL/터널(ngrok·cloudflared 등)은 **사용자 확인 후에만**(전역 가드레일: 공개 인그레스 신중).
-- 프리뷰는 워크트리에서만 만든다(커밋 전). git으로 되돌리기 쉽다. 본문은 두고 구조만 바꿔 비교한다.
+- 프리뷰는 워크트리에서만 만든다(커밋 전). git으로 되돌리기 쉽다.
 
 ## 콘텐츠 계약 — 프로젝트별 회고
 
