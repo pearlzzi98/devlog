@@ -1,0 +1,92 @@
+{{- define "main" }}
+
+{{- partial "home_info.html" . }}
+
+{{- $pages := (site.GetPage "/posts").RegularPagesRecursive.ByDate.Reverse }}
+
+{{- /* 분류 보기 토글 — 아이콘 버튼을 눌러 그 자리서 전환(선택은 localStorage 기억) */}}
+<div class="view-toggle" role="tablist" aria-label="분류 보기">
+  <button type="button" data-view="list" aria-label="리스트로 보기" title="리스트">
+    <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    <span>리스트</span>
+  </button>
+  <button type="button" data-view="grouped" aria-label="프로젝트별로 보기" title="프로젝트별">
+    <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span>프로젝트별</span>
+  </button>
+</div>
+
+{{- /* 리스트 뷰 — 전체 시간순 + 프로젝트 배지 */}}
+<div id="view-list" class="view">
+  {{- range $pages }}
+  <article class="post-entry">
+    {{- with .CurrentSection }}
+    <a class="proj-badge" href="{{ .RelPermalink }}" aria-label="{{ .Title }} 프로젝트 글만 보기">{{ .Title }}</a>
+    {{- end }}
+    <header class="entry-header"><h2 class="entry-hint-parent">{{ .Title }}</h2></header>
+    {{- if (ne (.Param "hideSummary") true) }}
+    <div class="entry-content"><p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p></div>
+    {{- end }}
+    {{- if not (.Param "hideMeta") }}
+    <footer class="entry-footer">{{ partial "post_meta.html" . }}</footer>
+    {{- end }}
+    <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+  </article>
+  {{- end }}
+</div>
+
+{{- /* 프로젝트별 뷰 — 폴더(섹션)명별 그룹 */}}
+<div id="view-grouped" class="view" hidden>
+  {{- range (site.GetPage "/posts").Sections.ByTitle }}
+  {{- $sec := . }}
+  {{- $secpages := .RegularPagesRecursive.ByDate.Reverse }}
+  <section class="project-group">
+    <div class="project-group-head">
+      <a class="name" href="{{ $sec.RelPermalink }}">{{ $sec.Title }}</a>
+      <span class="count">{{ len $secpages }}편</span>
+      <a class="more" href="{{ $sec.RelPermalink }}">더보기 →</a>
+    </div>
+    {{- range first 8 $secpages }}
+    <article class="post-entry">
+      <header class="entry-header"><h2 class="entry-hint-parent">{{ .Title }}</h2></header>
+      {{- if (ne (.Param "hideSummary") true) }}
+      <div class="entry-content"><p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p></div>
+      {{- end }}
+      {{- if not (.Param "hideMeta") }}
+      <footer class="entry-footer">{{ partial "post_meta.html" . }}</footer>
+      {{- end }}
+      <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+    </article>
+    {{- end }}
+  </section>
+  {{- end }}
+</div>
+
+<script>
+(function () {
+  var KEY = "devlog-view";
+  var btns = document.querySelectorAll(".view-toggle button");
+  var views = {
+    list: document.getElementById("view-list"),
+    grouped: document.getElementById("view-grouped")
+  };
+  function set(v) {
+    if (!views[v]) v = "list";
+    for (var k in views) { views[k].hidden = (k !== v); }
+    btns.forEach(function (b) {
+      var on = b.getAttribute("data-view") === v;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    try { localStorage.setItem(KEY, v); } catch (e) {}
+  }
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () { set(b.getAttribute("data-view")); });
+  });
+  var saved = "list";
+  try { saved = localStorage.getItem(KEY) || "list"; } catch (e) {}
+  set(saved);
+})();
+</script>
+
+{{- end }}
