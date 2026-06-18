@@ -1,0 +1,49 @@
+{{- define "main" }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+</header>
+
+{{- if .Sections }}
+{{- /* 프로젝트별 뷰 — /posts/ : 폴더(섹션)명별 그룹 */}}
+{{- range .Sections.ByTitle }}
+{{- $sec := . }}
+{{- $pages := .RegularPagesRecursive.ByDate.Reverse }}
+<section class="project-group">
+  <div class="project-group-head">
+    <a class="name" href="{{ $sec.RelPermalink }}">{{ $sec.Title }}</a>
+    <span class="count">{{ len $pages }}편</span>
+    <a class="more" href="{{ $sec.RelPermalink }}">더보기 →</a>
+  </div>
+  {{- range first 8 $pages }}
+  <article class="post-entry">
+    <header class="entry-header"><h2 class="entry-hint-parent">{{ .Title }}</h2></header>
+    {{- if (ne (.Param "hideSummary") true) }}
+    <div class="entry-content"><p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p></div>
+    {{- end }}
+    {{- if not (.Param "hideMeta") }}
+    <footer class="entry-footer">{{ partial "post_meta.html" . }}</footer>
+    {{- end }}
+    <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+  </article>
+  {{- end }}
+</section>
+{{- end }}
+
+{{- else }}
+{{- /* 단일 프로젝트 섹션 — /posts/<repo>/ : 그 프로젝트 글 시간순 */}}
+{{- range .RegularPages.ByDate.Reverse }}
+<article class="post-entry">
+  <header class="entry-header"><h2 class="entry-hint-parent">{{ .Title }}</h2></header>
+  {{- if (ne (.Param "hideSummary") true) }}
+  <div class="entry-content"><p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p></div>
+  {{- end }}
+  {{- if not (.Param "hideMeta") }}
+  <footer class="entry-footer">{{ partial "post_meta.html" . }}</footer>
+  {{- end }}
+  <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+</article>
+{{- end }}
+{{- end }}
+
+{{- end }}

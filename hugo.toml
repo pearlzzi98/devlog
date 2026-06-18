@@ -16,8 +16,8 @@ enableRobotsTXT = true
 [outputs]
   home = ["HTML", "RSS"]
 
-# 기본(tags) 외에 프로젝트별 모아보기용 taxonomy 추가.
-# front-matter projects: [...] → /projects/<이름>/ 에서 그 프로젝트 글이 시간순으로 모임.
+# 분류 보기 토글은 홈(layouts/index.html)의 아이콘 버튼 + JS로 그 자리서 전환(헤더 메뉴 아님).
+
+# taxonomy 비활성(빈 테이블 = 기본 tag/category도 끔).
+# 프로젝트별 모아보기는 디렉토리 섹션(/posts/<repo>/)으로 하고, 카드의 프로젝트 배지가 그 섹션으로 링크한다.
 [taxonomies]
-  tag = "tags"
-  project = "projects"

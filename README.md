@@ -16,36 +16,42 @@ Hugo는 **extended, 0.146 이상**이 필요하다(PaperMod 요구).
 
 ## 글 추가
 
-```bash
-hugo new content posts/2026-06-17.md
-```
+프로젝트(=폴더)별로 하루 한 파일: `content/posts/<repo>/YYYY-MM-DD.md`.
 
-front-matter 계약(일일 다이제스트):
+front-matter 계약:
 
 ```yaml
 ---
 title: "2026-06-17 회고"          # 작업한 날
 date: 2026-06-18T07:00:00+09:00   # 게시 시각 = 작업일 다음날 07:00 KST
 draft: false
-projects: ["repo-a", "repo-b"]   # 그날 작업한 프로젝트 — 본문 ## 섹션과 1:1
-summary: "그날 한 줄 요약"
-tags: ["회고"]
+projects: ["kakao_chatbot"]      # 폴더명과 동일(기록용)
+summary: "그날 그 프로젝트 한 줄 요약"
 ---
 ```
 
-- **하루에 파일 하나.** 그날 만진 프로젝트는 본문에서 `## <repo>` 섹션으로 나누고, `projects` 배열과 맞춘다.
-- **게시 시각**은 작업일 **다음날 07:00 KST**로 둔다(그날 회고는 다음날 아침 공개). 파일명·제목은 작업일 그대로.
-- `projects` 값은 taxonomy로 묶여 `/projects/<repo>/`에서 프로젝트별로 모아 볼 수 있다.
-- 과거 날짜로 백필하면 타임라인 제자리에 빌드된다. 게시 시각이 미래면 그 시각 전까지 비공개 — 이후 매일 도는 cron 재빌드(07:05 KST)로 자동 공개된다.
+- **프로젝트·하루 = 파일 하나.** 한 날에 두 프로젝트를 했으면 각 폴더에 파일 둘. 폴더(`<repo>`)가 곧 프로젝트(Hugo 섹션 `/posts/<repo>/`).
+- 본문은 `### 한 일` / `### 막힌 것, 고친 것` / `### 돌아보며`를 바로 둔다(`## <repo>` 래퍼 없음).
+- **게시 시각**은 작업일 **다음날 07:00 KST**(그날 회고는 다음날 아침 공개). 파일명·제목은 작업일 그대로.
+- 과거 날짜 백필도 같은 규칙. 게시 시각이 미래면 그 시각 전까지 비공개 — 이후 매일 도는 cron 재빌드(07:05 KST)로 자동 공개된다.
+- 회고는 `~/projects/<repo>/docs/todo/`(사실) + 세션 transcript(사람 텍스처)를 합쳐 쓴다. 자세한 규칙은 [`CLAUDE.md`](CLAUDE.md).
+
+## 분류 보기
+
+- 홈 상단 **토글**: ☰ 리스트(전체 시간순) / 🗂 프로젝트별(폴더 그룹). 선택은 브라우저에 기억된다.
+- 리스트 카드의 **프로젝트 배지**를 누르면 그 프로젝트(`/posts/<repo>/`) 글만 본다.
+- taxonomy(`/tags/`·`/projects/`)는 쓰지 않는다 — 분류는 폴더 섹션 + 배지로 한다.
 
 ## 구조
 
 ```
-content/posts/    회고 글 (YYYY-MM-DD.md)
-archetypes/       새 글 템플릿
-hugo.toml         사이트 설정 + taxonomies(tag, project)
-themes/PaperMod   테마 (git submodule)
-.github/          빌드·배포 워크플로
+content/posts/<repo>/   프로젝트별 회고 글 (YYYY-MM-DD.md) + _index.md
+archetypes/             새 글 템플릿
+layouts/                index.html(홈 보기 토글), section.html(프로젝트별/섹션 렌더)
+assets/css/extended/    커스텀 CSS(배지·토글·그룹)
+hugo.toml               사이트 설정 (taxonomy 비활성)
+themes/PaperMod          테마 (git submodule)
+.github/                빌드·배포 워크플로
 ```
 
 글쓰기 보이스·민감값 처리 등 작성 규칙은 [`CLAUDE.md`](CLAUDE.md) 참고.
