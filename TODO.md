@@ -4,11 +4,12 @@
 
 ## 백필
 
-- [ ] devbox / morning-briefing 등 다른 프로젝트의 `docs/todo` 이력을 회고로 백필(새 모델: `content/posts/<repo>/`, docs/todo+transcript 합쳐) → `docs/todo/2026-06-17_kakao-backfill.md` §"이어서 할 일"
+- [ ] devbox / morning-briefing 등 다른 프로젝트의 **과거** `docs/todo` 이력을 회고로 백필(새 모델: `content/posts/<repo>/`, docs/todo+transcript 합쳐) → `docs/todo/2026-06-17_kakao-backfill.md` §"이어서 할 일". ※ *어제치 이후*는 `vm/devlog-auto-retro` 타이머가 자동 처리 — 이건 과거 이력 한정. 수동 백필은 `RETRO_W=<날짜> devlog-auto-retro.sh`(dry-run→--apply)로도 가능.
 
 ## 개선
 
 - [ ] (선택) ts 없는 9편(05-23~06-13)의 도입부 리드인 복원 여부 — 후보1 전환 때 일괄 제거함, 살릴지 미정
+- [ ] **B-auto 첫 무인 자동발행 관측**(06-21 05:00 KST, 06-20치) — 민감값·보이스 확인. 이상 없으면 그대로, 누출 우려 시 denylist 보강 또는 B-PR 복귀(`--merge` 제거). → `docs/todo/2026-06-20_layout-and-workflow.md`
 
 ---
 완료 이력: [docs/todo/](docs/todo/)

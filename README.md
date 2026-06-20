@@ -35,6 +35,7 @@ summary: "그날 그 프로젝트 한 줄 요약"
 - **게시 시각**은 작업일 **다음날 07:00 KST**(그날 회고는 다음날 아침 공개). 파일명·제목은 작업일 그대로.
 - 과거 날짜 백필도 같은 규칙. 게시 시각이 미래면 그 시각 전까지 비공개 — 이후 매일 도는 cron 재빌드(07:05 KST)로 자동 공개된다.
 - 회고는 `~/projects/<repo>/docs/todo/`(사실) + 세션 transcript(사람 텍스처)를 합쳐 쓴다. 자세한 규칙은 [`CLAUDE.md`](CLAUDE.md).
+- **이 작업은 매일 자동화돼 있다** — devbox VM의 `vm/devlog-auto-retro` 타이머가 05:00 KST에 *어제 작업한 프로젝트*(그날 `docs/todo`∪transcript 활동)를 찾아 회고를 생성·발행한다(B-auto). 작업일 판정은 transcript의 실제 시각, 사실 소스는 `docs/todo`→그날 git 커밋→transcript 순. 수동 작성·백필도 그대로 가능.
 
 ## 분류 보기
 
