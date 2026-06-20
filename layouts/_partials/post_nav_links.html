@@ -1,0 +1,19 @@
+{{- /* devlog override: 제목이 날짜뿐("YYYY-MM-DD 회고")이라 prev/next가 어느 프로젝트
+       글인지 구분이 안 됨 → 리스트 배지와 같은 기준(.CurrentSection.Title=프로젝트)을 앞에 붙인다. */}}
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- if and (gt (len $pages) 1) (in $pages . ) }}
+<nav class="paginav">
+  {{- with $pages.Next . }}
+  <a class="prev" href="{{ .Permalink }}">
+    <span class="title">« {{ i18n "prev_page" }}</span>
+    <span>{{- with .CurrentSection }}<span class="paginav-proj">{{ .Title }}</span>{{ end }}{{- .Name -}}</span>
+  </a>
+  {{- end }}
+  {{- with $pages.Prev . }}
+  <a class="next" href="{{ .Permalink }}">
+    <span class="title">{{ i18n "next_page" }} »</span>
+    <span>{{- with .CurrentSection }}<span class="paginav-proj">{{ .Title }}</span>{{ end }}{{- .Name -}}</span>
+  </a>
+  {{- end }}
+</nav>
+{{- end }}
