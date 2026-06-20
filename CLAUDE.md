@@ -10,7 +10,7 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 - **예약 게시용 일일 재빌드**: 같은 워크플로에 `schedule` cron(`5 22 * * *` = 07:05 KST)이 걸려 있어 매일 한 번 재빌드한다. 미래 시각(다음날 07:00) 글은 push가 없어도 이 cron으로 시각이 지난 뒤 공개된다(cron 없을 땐 push 없으면 영영 누락됐음).
 - **로컬 빌드**: `git submodule update --init`(PaperMod 테마) 후 `hugo`(extended, ≥ 0.146). 산출물 `public/`은 `.gitignore`.
 - **글 생성**: `archetypes/posts.md` 기반.
-- **작업 흐름 — UI/UX 개선은 자동 prmain**: 레이아웃·CSS·테마·템플릿 등 devlog **UI/UX 개선**은 PR에서 멈추지 말고 **자동으로 prmain**(push→PR→main 머지)해 바로 배포한다(사용자 durable 승인 — 매번 머지 확인 안 받음). 프리뷰로 검토한 뒤 머지까지 한 번에. (콘텐츠/회고 *발행*은 별개 — 자동 회고 루틴의 B-auto가 담당.)
+- **작업 흐름 — UI/UX는 프리뷰 승인 후 자동 prmain**: 레이아웃·CSS·테마·템플릿 등 devlog **UI/UX 개선**은 **먼저 프리뷰로 보여주고, 사용자가 승인하면** 그때부터 **자동으로 prmain**(push→PR→main 머지)한다 — 승인 뒤엔 "머지할까요"를 따로 묻지 않고 배포까지 간다. **승인 전 무단 머지 금지**(프리뷰 승인이 게이트). (콘텐츠/회고 *발행*은 별개 — 자동 회고 루틴의 B-auto가 담당.)
 
 ### 로컬/모바일 프리뷰 (결정·검토용)
 
