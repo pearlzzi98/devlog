@@ -105,8 +105,32 @@
 .post-breadcrumb {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 12px;
   font-size: 14px;
 }
 .post-breadcrumb .back { color: var(--secondary); }
+
+/* ===== 상세 글 하단 floating 빠른이동 바 ===== */
+.float-nav {
+  display: flex; flex-direction: row; gap: .4rem; align-items: center;
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 1rem; z-index: 98;
+  max-width: calc(100vw - 1rem);
+  background: var(--entry); padding: .4rem .5rem; border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.float-nav .fn-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .3rem;
+  height: 2.2rem; padding: 0 .85rem; flex: 0 0 auto;
+  background: var(--tertiary); color: var(--secondary);
+  border-radius: 999px; text-decoration: none; transition: color .2s;
+}
+.float-nav .fn-btn:hover { color: var(--primary); }
+.float-nav .fn-ico { font-size: 1rem; line-height: 1; }
+.float-nav .fn-label { font-size: 13px; white-space: nowrap; }
+.float-nav .fn-sect .fn-label { max-width: 9ch; overflow: hidden; text-overflow: ellipsis; }
+.float-nav .fn-disabled { opacity: .3; pointer-events: none; }
+@media (max-width: 480px) {
+  .float-nav .fn-prev .fn-label, .float-nav .fn-next .fn-label { display: none; }
+}
