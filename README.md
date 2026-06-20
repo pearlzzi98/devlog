@@ -37,7 +37,11 @@ summary: "그날 그 프로젝트 한 줄 요약"
 - 회고는 `~/projects/<repo>/docs/todo/`(사실) + 세션 transcript(사람 텍스처)를 합쳐 쓴다. 자세한 규칙은 [`CLAUDE.md`](CLAUDE.md).
 - **이 작업은 매일 자동화돼 있다** — devbox VM의 `vm/devlog-auto-retro` 타이머가 05:00 KST에 *어제 작업한 프로젝트*(그날 `docs/todo`∪transcript 활동)를 찾아 회고를 생성·발행한다(B-auto). 작업일 판정은 transcript의 실제 시각, 사실 소스는 `docs/todo`→그날 git 커밋→transcript 순. 수동 작성·백필도 그대로 가능.
 
-## 분류 보기
+### 자동 회고 흐름
+
+하네스(bash)가 결정적 단계를 전부 쥐고 `claude -p`(도구 0개)는 회고 본문만 생성한다 — 무인 skip-permissions 없이 민감값 게이트를 거쳐 발행까지. (정본 인프라는 [devbox](https://github.com/pearlzzi98/devbox) `vm/devlog-auto-retro`; 다이어그램 소스: [docs/assets/devlog-auto-retro-flow.drawio](docs/assets/devlog-auto-retro-flow.drawio))
+
+![devlog 자동 회고 흐름](docs/assets/devlog-auto-retro-flow.png)
 
 - 홈 상단 **토글**: ☰ 리스트(전체 시간순) / 🗂 프로젝트별(폴더 그룹). 선택은 브라우저에 기억된다.
 - 리스트 카드의 **프로젝트 배지**를 누르면 그 프로젝트(`/posts/<repo>/`) 글만 본다.
