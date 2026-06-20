@@ -60,6 +60,9 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 - **taxonomy 끔**(`hugo.toml`의 `[taxonomies]` 빈 테이블): `/tags/`·`/projects/` 페이지 없음. 분류는 디렉토리 섹션 + 배지로만. 그래서 글 front-matter에 `tags`를 쓰지 않는다(전에 모든 글에 붙던 무의미한 `회고` 태그 제거).
 - **단일 프로젝트 섹션 페이지**(`/posts/<repo>/`)와 **프로젝트별 인덱스**(`/posts/`)는 `layouts/section.html`이 `.Sections` 유무로 분기 렌더(인덱스=그룹, 하위=그 프로젝트 글 목록).
 - 커스텀 CSS는 `assets/css/extended/custom.css`(PaperMod가 자동 로드).
+- **About 페이지**: 독립 `/about/`(국문, `content/about.md`) + `/about-en/`(영문, `content/about-en.md`), 상단 헤더 메뉴(`hugo.toml [[menu.main]]`)에 노출. 외부(HN/Reddit) 소개용으로 영문은 **"글 본문은 한국어"임을 정직히 명시**하고 두 페이지를 상호 링크(상대경로는 `../about/`·`../about-en/` — 트레일링슬래시 디렉토리라 그냥 `about-en/`은 404). 발행 파이프라인 다이어그램은 `docs/assets/devlog-publish-pipeline{,-en}.drawio`(국/영). **글 본문 영문화는 보류**(About만 KR/EN) — 본격 시 자동 회고 루틴이 EN도 생성해야 지속됨.
+- **OG/공유 카드**: 전역 `static/og.png`(1200×630) + `hugo.toml [params] images=["og.png"]`. PaperMod가 글에 cover/images 없으면 이걸 fallback으로 `og:image`·`twitter:image`(summary_large_image)에 출력. ⚠️ PaperMod는 **production 빌드에서만** og 메타를 내보낸다(`hugo server` dev엔 안 나옴 — 정상). 카드 소스·재생성: `tools/og/card.html` → `tools/og/render.sh`(헤드리스 chromium).
+- **이미지 임베드 shortcode**(`layouts/shortcodes/img.html`): baseURL 경로(`/devlog/`)를 `relURL`로 안전히 붙여 마크다운에서 이미지를 넣을 때 쓴다(goldmark `unsafe` 안 켜고).
 
 ## 글쓰기 보이스
 
