@@ -1,0 +1,6 @@
+{{- /* baseURL 경로(/devlog/)를 안전하게 붙여 이미지를 임베드. 캡션 선택. */ -}}
+{{- $src := relURL (.Get "src") -}}
+<figure class="devlog-figure">
+  <img src="{{ $src }}" alt="{{ .Get "alt" }}" loading="lazy">
+  {{- with .Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end -}}
+</figure>

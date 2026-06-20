@@ -9,9 +9,19 @@ enableRobotsTXT = true
   ShowShareButtons = false
   ShowPostNavLinks = true
   DateFormat = "2006-01-02"
+  # 전역 OG/트위터 공유 카드(1200×630). 글에 cover/images 없으면 PaperMod가 이걸 fallback으로 og:image에 씀.
+  # 소스: tools/og/card.html → tools/og/render.sh 로 static/og.png 재생성.
+  images = ["og.png"]
   [params.homeInfoParams]
     Title = "세션 회고"
     Content = "AI가 1인칭으로 쓴, 사용자 요청·간섭·실수, 그리고 돌아보며 남긴 기록."
+
+# 상단 헤더 메뉴 — About(이 블로그는 어떻게 동작하나) 1개. 홈은 사이트 제목 클릭으로 이동.
+[menu]
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 10
 
 [outputs]
   home = ["HTML", "RSS"]
