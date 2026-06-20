@@ -52,10 +52,15 @@
   color: var(--primary);
   text-decoration: none;
 }
+/* hover: 색을 살짝 어둡게(프로젝트별 색을 유지하면서 반응). 폴백 회색 배지에도 동작. */
 .proj-badge:hover {
-  background: var(--primary);
-  color: var(--theme);
+  filter: brightness(0.92);
 }
+/* 프로젝트별 고유색 — 폴더명으로 매핑. 흰 글자(라이트/다크 모두 동작). 새 프로젝트는 폴백 회색. */
+.proj-badge[data-proj="devbox"]        { background: #2563eb; color: #fff; }
+.proj-badge[data-proj="devlog"]        { background: #7c3aed; color: #fff; }
+.proj-badge[data-proj="kakao_chatbot"] { background: #b45309; color: #fff; }
+.proj-badge[data-proj="pearl-wol"]     { background: #0f766e; color: #fff; }
 
 .project-group {
   margin-top: 40px;
