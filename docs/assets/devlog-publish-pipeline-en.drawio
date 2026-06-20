@@ -1,0 +1,31 @@
+<mxfile><diagram name="publish-pipeline-en"><mxGraphModel dx="900" dy="600" grid="0" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" math="0" background="#ffffff">
+<root>
+<mxCell id="0"/>
+<mxCell id="1" parent="0"/>
+
+<mxCell id="title" value="devlog — from a day's work to a published post" style="text;html=1;align=left;fontSize=20;fontStyle=1;fontColor=#1f2328;" vertex="1" parent="1"><mxGeometry x="40" y="40" width="700" height="30" as="geometry"/></mxCell>
+
+<mxCell id="gsrc" value="Record sources (what happened that day)" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#f5f0fa;strokeColor=#9673a6;fontColor=#6a1b9a;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="40" y="110" width="250" height="190" as="geometry"/></mxCell>
+<mxCell id="todo" value="docs/todo&#10;Technical log — what was done (facts)" style="shape=note;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1f2328;size=14;" vertex="1" parent="1"><mxGeometry x="62" y="150" width="206" height="58" as="geometry"/></mxCell>
+<mxCell id="ts" value="Session transcript&#10;Human texture — interruptions, fixes, feelings" style="shape=note;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1f2328;size=14;" vertex="1" parent="1"><mxGeometry x="62" y="222" width="206" height="58" as="geometry"/></mxCell>
+
+<mxCell id="cc" value="Claude Code&#10;merges both sources and&#10;writes a first-person retrospective" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;" vertex="1" parent="1"><mxGeometry x="370" y="170" width="190" height="80" as="geometry"/></mxCell>
+
+<mxCell id="md" value="Markdown post&#10;content/posts/&lt;project&gt;/&#10;YYYY-MM-DD.md" style="shape=note;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;size=14;" vertex="1" parent="1"><mxGeometry x="640" y="170" width="180" height="80" as="geometry"/></mxCell>
+
+<mxCell id="gdep" value="Deploy (GitHub)" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#f0f6ff;strokeColor=#6c8ebf;fontColor=#1d4e89;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="900" y="110" width="250" height="200" as="geometry"/></mxCell>
+<mxCell id="gha" value="GitHub Actions&#10;builds the site with Hugo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;" vertex="1" parent="1"><mxGeometry x="924" y="150" width="202" height="60" as="geometry"/></mxCell>
+<mxCell id="pages" value="GitHub Pages&#10;publishes the live site" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;" vertex="1" parent="1"><mxGeometry x="924" y="232" width="202" height="60" as="geometry"/></mxCell>
+
+<mxCell id="cron" value="Daily cron&#10;rebuilds scheduled (next-morning) posts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;" vertex="1" parent="1"><mxGeometry x="900" y="350" width="250" height="56" as="geometry"/></mxCell>
+
+<mxCell id="e1" value="" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#6a1b9a;fontColor=#6a1b9a;" edge="1" parent="1" source="todo" target="cc"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e2" value="" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#6a1b9a;fontColor=#6a1b9a;" edge="1" parent="1" source="ts" target="cc"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e3" value="writes" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;" edge="1" parent="1" source="cc" target="md"><mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-14" as="offset"/></mxGeometry></mxCell>
+<mxCell id="e4" value="git push (main)" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;" edge="1" parent="1" source="md" target="gha"><mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-14" as="offset"/></mxGeometry></mxCell>
+<mxCell id="e5" value="" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;" edge="1" parent="1" source="gha" target="pages"><mxGeometry relative="1" as="geometry"></mxGeometry></mxCell>
+<mxCell id="e6" value="auto rebuild" style="endArrow=block;rounded=1;dashed=1;labelBackgroundColor=#ffffff;strokeColor=#9a6a00;fontColor=#9a6a00;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="cron" target="gha"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1185" y="378"/><mxPoint x="1185" y="180"/></Array></mxGeometry></mxCell>
+
+<mxCell id="legend" value="Purple = record sources (facts + texture) · Green = the AI-writing step · Blue = GitHub auto-deploy · Orange = daily rebuild for scheduled posts.&#10;Nobody writes the retrospectives by hand — the AI reads the day's records, writes in the first person, and once pushed GitHub builds and publishes." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#f6f8fa;strokeColor=#d0d7de;fontColor=#1f2328;" vertex="1" parent="1"><mxGeometry x="40" y="440" width="1110" height="70" as="geometry"/></mxCell>
+
+</root></mxGraphModel></diagram></mxfile>
