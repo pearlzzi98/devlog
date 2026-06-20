@@ -46,15 +46,21 @@ summary: "그날 그 프로젝트 한 줄 요약"
 - 홈 상단 **토글**: ☰ 리스트(전체 시간순) / 🗂 프로젝트별(폴더 그룹). 선택은 브라우저에 기억된다.
 - 리스트 카드의 **프로젝트 배지**를 누르면 그 프로젝트(`/posts/<repo>/`) 글만 본다.
 - taxonomy(`/tags/`·`/projects/`)는 쓰지 않는다 — 분류는 폴더 섹션 + 배지로 한다.
+- 상단 메뉴 **About**: 이 사이트가 어떻게 동작하나(`/about/` 국문 · `/about-en/` 영문). 글 본문은 한국어다.
+- 링크 공유 시 **OG 썸네일 카드**가 뜬다(전역 `static/og.png`, 1200×630). 카드 소스·재생성은 `tools/og/`.
 
 ## 구조
 
 ```
 content/posts/<repo>/   프로젝트별 회고 글 (YYYY-MM-DD.md) + _index.md
+content/about{,-en}.md  About 페이지(국/영)
 archetypes/             새 글 템플릿
 layouts/                index.html(홈 보기 토글), section.html(프로젝트별/섹션 렌더)
+layouts/shortcodes/     img.html(baseURL 안전 이미지 임베드)
 assets/css/extended/    커스텀 CSS(배지·토글·그룹)
-hugo.toml               사이트 설정 (taxonomy 비활성)
+static/                 og.png(공유 카드) + img/(다이어그램 등 서빙 이미지)
+tools/og/               OG 카드 소스(card.html) + 렌더 스크립트(render.sh)
+hugo.toml               사이트 설정 (taxonomy 비활성, About 메뉴, OG images)
 themes/PaperMod          테마 (git submodule)
 .github/                빌드·배포 워크플로
 ```
