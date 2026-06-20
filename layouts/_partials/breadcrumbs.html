@@ -1,0 +1,10 @@
+{{- /* devlog override: 상세 글 상단에 '목록으로 돌아가기' + 이 글이 어느 프로젝트인지.
+       제목이 날짜뿐이라 프로젝트 표기가 필요. 단일 글에서만 렌더(리스트/섹션엔 빈 출력). */}}
+{{- if and .IsPage .CurrentSection }}
+<nav class="post-breadcrumb" aria-label="이동">
+  <a class="back" href="{{ site.Home.RelPermalink }}">← 목록</a>
+  {{- with .CurrentSection }}
+  <a class="proj-badge" href="{{ .RelPermalink }}" aria-label="{{ .Title }} 프로젝트 글만 보기">{{ .Title }}</a>
+  {{- end }}
+</nav>
+{{- end }}

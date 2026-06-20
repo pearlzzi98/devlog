@@ -44,9 +44,11 @@
     <div class="project-group-head">
       <a class="name" href="{{ $sec.RelPermalink }}">{{ $sec.Title }}</a>
       <span class="count">{{ len $secpages }}편</span>
+      {{- if gt (len $secpages) 3 }}
       <a class="more" href="{{ $sec.RelPermalink }}">더보기 →</a>
+      {{- end }}
     </div>
-    {{- range first 8 $secpages }}
+    {{- range first 3 $secpages }}
     <article class="post-entry">
       <header class="entry-header"><h2 class="entry-hint-parent">{{ .Title }}</h2></header>
       {{- if (ne (.Param "hideSummary") true) }}
