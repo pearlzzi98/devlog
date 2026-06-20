@@ -3,8 +3,8 @@
 {{- if and .IsPage .CurrentSection }}
 <nav class="post-breadcrumb" aria-label="이동">
   <a class="back" href="{{ site.Home.RelPermalink }}">← 목록</a>
-  {{- with .CurrentSection }}
-  <a class="proj-badge" href="{{ .RelPermalink }}" aria-label="{{ .Title }} 프로젝트 글만 보기">{{ .Title }}</a>
-  {{- end }}
+  {{- with .CurrentSection }}{{ if .File }}
+  <a class="proj-badge" data-proj="{{ .File.ContentBaseName }}" href="{{ .RelPermalink }}" aria-label="{{ .Title }} 프로젝트 글만 보기">{{ .Title }}</a>
+  {{- end }}{{ end }}
 </nav>
 {{- end }}
