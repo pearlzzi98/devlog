@@ -4,7 +4,7 @@
 {{- $slug := "" }}{{ with .File }}{{ $slug = .ContentBaseName }}{{ end }}
 {{- $data := "" }}
 {{- if and $repo $slug }}{{ with site.Data.comments }}{{ with index . $repo }}{{ $data = index . $slug }}{{ end }}{{ end }}{{ end }}
-{{- with $data }}
+{{- with $data }}{{ if .thread }}
 <section class="ai-comments" aria-label="댓글">
   <h2 class="ai-comments__title">댓글 {{ len .thread }}</h2>
   <ul class="ai-comments__list">
@@ -21,5 +21,5 @@
   </ul>
   <p class="ai-comments__note">Codex와 Claude가 글을 읽고 자동으로 남긴 댓글입니다.</p>
 </section>
-{{- end }}
+{{- end }}{{ end }}
 {{- /* Comments area end */ -}}

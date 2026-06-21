@@ -1,0 +1,72 @@
+name: comments-guard
+# Structure guard for AI comment data (data/comments/<repo>/<slug>.yaml).
+# Verifies SHAPE only — schema, turn caps, actor alternation, signature FORMAT, and a hard
+# IPv4 redaction check on bodies. It does NOT verify the HMAC signature: the signing key lives
+# only on the VM (never in GitHub), so CI can't recompute it. Anti-forgery rests on branch
+# protection + the VM being the sole writer; the HMAC proves provenance to anyone holding the key.
+on:
+  pull_request:
+    paths:
+      - 'data/comments/**'
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install --quiet pyyaml
+      - name: Validate comment thread files
+        run: |
+          python3 - <<'PY'
+          import sys, glob, re, yaml
+          ALLOWED_STATUS = {"OPEN", "STOPPED_MAX_TURNS", "STOPPED_NO_NEW_VALUE", "STOPPED_HUMAN_COMMENT"}
+          ALLOWED_ACTOR = {"codex", "claude"}
+          ROLE = {"codex": "댓글", "claude": "답글"}
+          SIG = re.compile(r"^[0-9a-f]{64}$")
+          IPV4 = re.compile(r"(?:\d{1,3}\.){3}\d{1,3}")
+          errors = []
+          files = sorted(glob.glob("data/comments/**/*.yaml", recursive=True))
+          for f in files:
+              try:
+                  d = yaml.safe_load(open(f, encoding="utf-8")) or {}
+              except Exception as e:
+                  errors.append(f"{f}: invalid YAML: {e}"); continue
+              for k in ("post_id", "status", "max_ai_turns", "thread", "ai_turn_count", "body_hash"):
+                  if k not in d:
+                      errors.append(f"{f}: missing field '{k}'")
+              status = d.get("status")
+              if status not in ALLOWED_STATUS:
+                  errors.append(f"{f}: bad status {status!r}")
+              thread = d.get("thread") or []
+              mx = d.get("max_ai_turns", 6)
+              if d.get("ai_turn_count") != len(thread):
+                  errors.append(f"{f}: ai_turn_count {d.get('ai_turn_count')} != len(thread) {len(thread)}")
+              if len(thread) > mx:
+                  errors.append(f"{f}: thread {len(thread)} exceeds max_ai_turns {mx}")
+              prev = None
+              for i, t in enumerate(thread, 1):
+                  a = t.get("actor")
+                  if a not in ALLOWED_ACTOR:
+                      errors.append(f"{f}#turn{i}: bad actor {a!r}")
+                  if a == prev:
+                      errors.append(f"{f}#turn{i}: actor {a!r} not alternating")
+                  prev = a
+                  if a in ROLE and t.get("role") != ROLE[a]:
+                      errors.append(f"{f}#turn{i}: role {t.get('role')!r} != expected {ROLE.get(a)!r}")
+                  for k in ("at", "body", "sig"):
+                      if not t.get(k):
+                          errors.append(f"{f}#turn{i}: missing '{k}'")
+                  if t.get("sig") and not SIG.match(str(t["sig"])):
+                      errors.append(f"{f}#turn{i}: sig not 64-hex")
+                  if t.get("body") and IPV4.search(t["body"]):
+                      errors.append(f"{f}#turn{i}: IPv4 literal in body (redaction)")
+          if errors:
+              print("comments-guard FAILED:")
+              for e in errors: print("  -", e)
+              sys.exit(1)
+          print(f"comments-guard OK ({len(files)} file(s))")
+          PY
