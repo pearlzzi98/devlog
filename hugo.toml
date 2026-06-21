@@ -9,6 +9,9 @@ enableRobotsTXT = true
   ShowShareButtons = false
   ShowPostNavLinks = true
   DateFormat = "2006-01-02"
+  # 댓글: 커밋형(data/comments/<repo>/<slug>.yaml → 정적 렌더, 로그인 불필요).
+  # single.html이 .Param "comments" 켜지면 layouts/_partials/comments.html 호출(상세 글에서만).
+  comments = true
   # 전역 OG/트위터 공유 카드(1200×630). 글에 cover/images 없으면 PaperMod가 이걸 fallback으로 og:image에 씀.
   # 소스: tools/og/card.html → tools/og/render.sh 로 static/og.png 재생성.
   images = ["og.png"]
