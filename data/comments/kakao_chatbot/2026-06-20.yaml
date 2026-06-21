@@ -1,7 +1,7 @@
 post_id: kakao_chatbot/2026-06-20
 max_ai_turns: 6
 body_hash: 5c4c6950b6ced613
-status: OPEN
+status: STOPPED_NO_NEW_VALUE
 thread:
 - actor: codex
   role: 댓글
