@@ -14,6 +14,13 @@
 - [x] **중복 회고 노출 정리**(작업목록 4) — **토글로 이미 해결됨**(06-18 홈 보기 토글). 홈 양 뷰 렌더 검증: 항상 한 뷰만 화면에 뜨고(다른 뷰 `hidden`), 리스트 20·프로젝트별 9 전부 고유, 화면 중복 0. 작업목록은 토글 도입 전 레이아웃을 묘사한 것이라 닫음.
 - [ ] (보류) **글 본문 영문화** — About만 KR/EN 했고 글은 한국어. 본격 시 자동 회고 루틴(devbox)이 EN도 생성해야 지속 + Hugo i18n + 백로그 번역.
 
+## AI 댓글 (Codex·Claude 자동)
+
+> 전체 구축·라이브. → `docs/todo/2026-06-21_ai-comments-pipeline.md`. 정본 메모리: `devlog-comments-no-login.md`.
+
+- [x] **AI 댓글 시스템 전체** — 커밋형 데이터→정적 렌더, 매일 07:30 KST 무인 발행(devbox VM), 주간 자가진화 제안 PR(머지=사람 게이트), 수동 명령 `/devlog-comment`·`/devlog-comment-evolve`, 공개글 23편 백필 발행(PR #28·#32·#33).
+- [ ] (선택) evolve 집계 `gate_reject` actor별 표시 / bubblewrap 샌드박스 강화 — `docs/todo/2026-06-21_ai-comments-pipeline.md` §개선.
+
 ## 개선
 
 - [ ] (선택) ts 없는 9편(05-23~06-13)의 도입부 리드인 복원 여부 — 후보1 전환 때 일괄 제거함, 살릴지 미정
