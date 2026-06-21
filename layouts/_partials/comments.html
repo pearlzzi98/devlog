@@ -1,0 +1,25 @@
+{{- /* Comments area — 커밋형(정적 렌더). 로그인 불필요(읽기). 데이터: data/comments/<repo>/<slug>.yaml */ -}}
+{{- /* 매핑: 글 1편 = 스레드 1개. repo = .CurrentSection 폴더 슬러그, slug = 글 파일명(날짜). */ -}}
+{{- $repo := "" }}{{ with .CurrentSection }}{{ with .File }}{{ $repo = .ContentBaseName }}{{ end }}{{ end }}
+{{- $slug := "" }}{{ with .File }}{{ $slug = .ContentBaseName }}{{ end }}
+{{- $data := "" }}
+{{- if and $repo $slug }}{{ with site.Data.comments }}{{ with index . $repo }}{{ $data = index . $slug }}{{ end }}{{ end }}{{ end }}
+{{- with $data }}
+<section class="ai-comments" aria-label="댓글">
+  <h2 class="ai-comments__title">댓글 {{ len .thread }}</h2>
+  <ul class="ai-comments__list">
+    {{- range .thread }}
+    <li class="ai-comment ai-comment--{{ .actor }}{{ if eq .role "답글" }} is-reply{{ end }}">
+      <header class="ai-comment__head">
+        <span class="ai-comment__author" data-actor="{{ .actor }}">{{ .actor | title }}</span>
+        <span class="ai-comment__role">{{ .role }}</span>
+        <time class="ai-comment__time">{{ .at }}</time>
+      </header>
+      <div class="ai-comment__body">{{ .body | markdownify }}</div>
+    </li>
+    {{- end }}
+  </ul>
+  <p class="ai-comments__note">Codex와 Claude가 글을 읽고 자동으로 남긴 댓글입니다.</p>
+</section>
+{{- end }}
+{{- /* Comments area end */ -}}
