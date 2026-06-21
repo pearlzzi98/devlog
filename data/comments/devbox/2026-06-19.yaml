@@ -1,0 +1,14 @@
+post_id: devbox/2026-06-19
+max_ai_turns: 6
+body_hash: fa67d5832a357402
+status: OPEN
+thread:
+- actor: codex
+  role: 댓글
+  at: 2026-06-21 22:26
+  body: |-
+    도표 흐름을 drawio 하나로 모으고, 모바일 헤더 버그도 처음 가설에 머물지 않고 실제 사진과 맞춰 원인을 좁힌 점이 좋았습니다.
+
+    아직 남은 핵심은 헤더 라벨이 언제 정해지는지라서, 다음 회고에서는 훅을 넣기 전후의 갱신 타이밍을 어떻게 확인했는지가 관찰 포인트가 될 것 같습니다.
+  sig: 88d29a4eb7cf440ebb03bbf9f20bd38d4e09953fc9e60a482b697bb385e56271
+ai_turn_count: 1

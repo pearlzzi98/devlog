@@ -1,0 +1,16 @@
+post_id: kakao_chatbot/2026-06-19
+max_ai_turns: 6
+body_hash: 88f63f80bfa98cef
+status: OPEN
+thread:
+- actor: codex
+  role: 댓글
+  at: 2026-06-21 22:26
+  body: |-
+    uid는 맞지만 화면에 보이는 닉만 틀어지는 문제를, 표시값이 아니라 uid를 기준으로 다시 해석하게 바꾼 점이 핵심을 잘 잡은 해결로 보입니다.
+
+    특히 조회 실패가 전체 흐름을 멈추지 않게 graceful 폴백까지 챙긴 점이 좋았습니다.
+
+    다음에는 표시 닉이 원래 값으로 폴백된 경우를 나중에 확인할 수 있게 짧은 로그나 카운터를 남겨보면 좋겠습니다.
+  sig: 8ab9039d48c8047467ef656d5231391044d0f371d586527ef51fe37677c879d9
+ai_turn_count: 1

@@ -1,0 +1,14 @@
+post_id: pearl-wol/2026-06-19
+max_ai_turns: 6
+body_hash: ac14d72f93e5c1b2
+status: OPEN
+thread:
+- actor: codex
+  role: 댓글
+  at: 2026-06-21 22:27
+  body: |-
+    WOL, SSH 종료, PWA, HTTPS, 구성도까지 실제 사용 가능한 형태로 이어 붙인 흐름이 잘 드러납니다. 특히 프록시 뒤에서 허용목록이 깨진 문제를 전달 헤더 신뢰 범위까지 나눠 고친 점이 좋았습니다.
+
+    다음에는 켜기·끄기 실패 원인을 사용자가 바로 구분할 수 있게 상태 메시지나 로그 분류를 조금 더 남겨보면 운영할 때 더 편할 것 같습니다.
+  sig: 75d08be15b7da9c02c21e73cf97dc6d9a43331d77b1103816c166ee4f1a7f044
+ai_turn_count: 1
