@@ -19,7 +19,7 @@ Codex(댓글)·Claude(답글) 자동 댓글 시스템 전체 구축·라이브. 
 - [ ] (선택) evolve 집계에 `gate_reject`도 actor별 표시 — `devlog-comment-evolve.sh` aggregate_signals. 영향: 제안 귀속 정밀도.
 - [ ] (선택) `apt install bubblewrap` — codex 생성잡 샌드박스 강화(현재 번들 폴백 경고).
 - [ ] (검토→보류) 가드 CI를 main required check로 — 외부 PR은 write 권한이 없어 어차피 사람 머지라 마진 작음. 봇은 서명 전 자체 게이트라 봇 경로 안전.
-- [ ] (선택) **댓글 파이프라인 다이어그램** — `docs/assets/devlog-comments-flow.drawio`(`/drawio`로 신규): detect→generate(codex/claude)→gate→HMAC sign→PR→guard CI→merge→deploy + 주간 evolve 제안 루프. README에 임베드. (현재 텍스트 문서로 커버됨, 다이어그램은 미작성.)
+- [x] **댓글 파이프라인 다이어그램**(PR #35) — `docs/assets/devlog-comments-flow{,-en}.drawio` + PNG(headless 렌더 검증). README 임베드 + About 국/영에 절+다이어그램. 렌더 스크립트 `scripts/render-drawio.mjs`(puppeteer-core).
 
 ## 버그수정
 
