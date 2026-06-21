@@ -18,7 +18,7 @@
 
 - [ ] (선택) ts 없는 9편(05-23~06-13)의 도입부 리드인 복원 여부 — 후보1 전환 때 일괄 제거함, 살릴지 미정
 - [ ] (선택) 프로젝트별 뷰 그룹 헤더(`.name`)에 프로젝트 고유색 입히기 — 시각 통일용(기능상 불필요). → `docs/todo/2026-06-20_post-nav-and-format.md`
-- [ ] **B-auto 첫 무인 자동발행 관측**(06-21 05:00 KST, 06-20치) — 민감값·보이스 확인. 이상 없으면 그대로, 누출 우려 시 denylist 보강 또는 B-PR 복귀(`--merge` 제거). → `docs/todo/2026-06-20_layout-and-workflow.md`
+- [x] **B-auto 첫 무인 자동발행 관측**(06-21 05:00 KST, 06-20치) — 무인 자동발행 정상 동작(PR #25, 06-20 devbox·devlog·kakao_chatbot 3편). 사용자 점검 결과 민감값·보이스 **이상 없음** → B-auto `--merge` 유지. → `docs/todo/2026-06-20_layout-and-workflow.md`
 
 ---
 완료 이력: [docs/todo/](docs/todo/)
