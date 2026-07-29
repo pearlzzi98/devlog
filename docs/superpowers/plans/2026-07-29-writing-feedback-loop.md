@@ -756,7 +756,8 @@ update_rules() {
   # cap: keep the RULES_MAX most-recently-reinforced rules.
   local total; total="$(grep -c '^- \[' "$rules" || true)"
   if [[ "${total:-0}" -gt "$RULES_MAX" ]]; then
-    local keep; keep="$(grep '^- \[' "$rules" | sort -t'최' -k2 | tail -n "$RULES_MAX")"
+    local keep
+    keep="$(grep '^- \[' "$rules" | sed 's|.*최근 \([0-9-]*\).*|\1\t&|' | sort -k1,1 | cut -f2- | tail -n "$RULES_MAX")" || keep=""
     { grep -v '^- \[' "$rules"; printf '%s\n' "$keep"; } > "$rules.tmp" && mv "$rules.tmp" "$rules"
   fi
   return 0
@@ -768,10 +769,7 @@ update_rules() {
 Run: `bash /home/ubuntu/projects/devbox/tests/test-devlog-auto-retro.sh`
 Expected: `ALL PASS`
 
-캡 정렬이 어긋나 `oldest filler evicted`가 실패하면, 정렬 키를 `최근 ` 뒤 날짜로 바꾼다:
-```bash
-keep="$(grep '^- \[' "$rules" | sed 's|.*최근 \([0-9-]*\).*|\1\t&|' | sort -k1,1 | cut -f2- | tail -n "$RULES_MAX")"
-```
+> **정정(실행 중 발견):** 초안은 `sort -t'최' -k2`를 썼는데, GNU sort는 **멀티바이트 구분자를 거부**해 로케일과 무관하게 `multi-character tab` 오류로 exit 2를 낸다. 맨몸 대입 안에 있어 `set -euo pipefail`에서 **스크립트가 통째로 죽는다.** 위 코드는 이미 정정된 형태다.
 
 - [ ] **Step 5: 커밋**
 
