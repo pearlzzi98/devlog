@@ -406,6 +406,8 @@ EOF
 - Produces: env `LINT_SENTENCE_MAX`(기본 90).
 - 내보내는 코드: `long_sentence` · `numbered_lead` · `inline_code_inconsistent`.
 
+> **환경 함정 — 실행 중 발견.** `[가-힣]` 대괄호 범위는 GNU grep 3.11이 UTF-8 로케일에서 `Invalid collation character`로 **죽는다**(systemd 서비스가 `LANG=C.UTF-8`이라 프로덕션이 정확히 그 조건). `-oP '\p{Hangul}'`로 써야 한다. 반대로 `LC_ALL=C`에선 `\p{Hangul}`이 조용히 아무것도 못 잡고, `wc -m`이 바이트를 세어 90자 상한이 사실상 30자가 된다. 그래서 스크립트가 `PATH`처럼 **로케일도 명시적으로 고정**해야 한다(`export LC_ALL="${LC_ALL:-C.UTF-8}"`). 개발 셸이 `grep`을 `ugrep`으로 감싸고 있어 대화형 테스트에선 이 결함이 가려진다 — 반드시 `bash script.sh` 서브프로세스로 확인할 것.
+
 **알려진 한계(의도적):** 스팬에 `|`가 들어가면 `filter_critiques`의 필드 분리가 잘려 그 지적이 **버려진다**(오염이 아니라 폐기 — 안전한 방향). 표 줄은 lint 대상에서 이미 제외하므로 실제 발생은 드물다. `bold_lead_missing`은 갈래 시작 패턴이 블록형/불릿형 둘 다여서 오탐이 크므로 lint에 넣지 않는다.
 
 - [ ] **Step 1: 실패하는 테스트를 쓴다**
@@ -471,13 +473,13 @@ lint_post() {
   while IFS= read -r txt; do
     [[ -n "$txt" ]] || continue
     printf 'CRITIQUE: numbered_lead | "%s" | 번호 매김 리드 금지\n' "${txt:0:20}"
-  done < <(grep -E '^\*\*[0-9]+\)' "$f" || true)
+  done < <(awk '/^```/{f=!f;next} f{next} {print}' "$f" | grep -E '^\*\*[0-9]+\)' || true)
   # (3) bare slash commands — house convention is always backticked.
   while IFS= read -r cmd; do
     [[ -n "$cmd" ]] || continue
     printf 'CRITIQUE: inline_code_inconsistent | "%s" | 슬래시 명령은 백틱으로 감싼다\n' "$cmd"
   done < <(awk '/^```/{f=!f;next} f{next} {print}' "$f" | sed 's/`[^`]*`//g' \
-           | grep -oE '/[가-힣]{2,}' | sort -u || true)
+           | grep -oP '/\p{Hangul}{2,}' | sort -u || true)
 }
 ```
 
