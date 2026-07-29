@@ -969,10 +969,9 @@ review_post() {
 
 ```bash
     # Promote recurring critiques into the rule note (committed with the posts).
-    local promoted=""
-    promoted="$(update_rules "$wt/docs/writing-rules.md" "$(date +%F)" || true)"
-    if [[ -n "$promoted" ]]; then
-      log "규칙 승급: $(printf '%s' "$promoted" | tr '\n' ' ')"
+    PROMOTED_CODES="$(update_rules "$wt/docs/writing-rules.md" "$(date +%F)" || true)"
+    if [[ -n "$PROMOTED_CODES" ]]; then
+      log "규칙 승급: $(printf '%s' "$PROMOTED_CODES" | tr '\n' ' ')"
       ( cd "$wt" && git add docs/writing-rules.md ) || true
     fi
 ```
@@ -1163,7 +1162,7 @@ EOF
     "$(printf '%s' "$PROMOTED_CODES" | tr '\n' ' ')"
 ```
 
-Task 7 Step 6의 승급 블록에서 `promoted`를 이 변수로 넘긴다 — `local promoted=""`를 지우고 `PROMOTED_CODES=""`로 바꾼 뒤, 대입도 `PROMOTED_CODES="$(update_rules ...)"`로 고친다.
+Task 7 Step 6이 이미 `PROMOTED_CODES`에 담아둔다(`local` 아님 — `retro_pr_body`에서 보여야 한다).
 
 - [ ] **Step 2: dry-run으로 본문을 확인한다**
 
