@@ -913,10 +913,10 @@ review_post() {
   [[ -f "$wt/docs/writing-contract.md" ]] && contract="$(cat "$wt/docs/writing-contract.md")"
   [[ -f "$wt/docs/writing-rules.md" ]] && rules="$(cat "$wt/docs/writing-rules.md")"
   [[ -f "$DENYLIST_FILE" ]] && deny="$(cat "$DENYLIST_FILE")"
-  pw="$(date -d "$w -1 day" +%F)"
+  pw="$(date -d "$w -1 day" +%F 2>/dev/null)" || { cat "$draft"; return 0; }
   [[ -f "$wt/content/posts/$repo/$pw.md" ]] && prev="$(cat "$wt/content/posts/$repo/$pw.md")"
 
-  raw="$(mktemp)"
+  raw="$(mktemp)" || { cat "$draft"; return 0; }
   {
     cat "$REVIEW_PROMPT_FILE"
     printf '\n\n=== 글쓰기 계약 ===\n%s\n' "$contract"
@@ -931,13 +931,14 @@ review_post() {
         --disallowedTools Bash Edit Write Read Glob Grep WebFetch WebSearch Task NotebookEdit \
         > "$raw" 2>/dev/null || { log "$repo: 리뷰 호출 실패 — 초안 사용"; rm -f "$raw"; cat "$draft"; return 0; }
 
-  final="$(mktemp)"; review_revised "$raw" > "$final"
+  final="$(mktemp)" || { rm -f "$raw"; cat "$draft"; return 0; }
+  review_revised "$raw" > "$final"
   if ! revision_sane "$draft" "$final"; then
     log "$repo: 리뷰 수정본이 형식 위반/과소 — 초안 사용"
     rm -f "$raw" "$final"; cat "$draft"; return 0
   fi
   # model findings + deterministic lint, both span-verified against the DRAFT.
-  crit="$(mktemp)"
+  crit="$(mktemp)" || { rm -f "$raw" "$final"; cat "$draft"; return 0; }
   { review_critiques "$raw"; lint_post "$draft"; } | filter_critiques "$draft" > "$crit" || true
   log_critiques "$repo" "$w" < "$crit" || true
   log "$repo: 리뷰 완료 (지적 $(wc -l < "$crit")건)"
@@ -946,6 +947,8 @@ review_post() {
   return 0
 }
 ```
+
+> **`set -e` 함정 — Task 5 리뷰에서 발견.** `review_post`는 "모든 실패 경로가 초안을 낸다"는 계약을 지는데, **맨몸 명령치환 대입**(`x="$(cmd)"`)은 `set -euo pipefail` 아래서 실패를 호출자로 전파해 스크립트를 통째로 죽인다 — fail-open 가드에 닿기도 전에. (`local x="$(cmd)"`는 `local`이 0을 반환해 가려지지만, 위처럼 `local` 선언과 대입이 분리되면 노출된다.) 위 코드의 `pw`·`raw`·`final`·`crit` 대입에 `||` 폴백을 붙인 이유다. 그리고 **테스트 하네스가 `set +e`로 돌기 때문에 이 결함은 유닛 테스트로 안 잡힌다** — 실제 `set -euo pipefail` 서브프로세스로 확인해야 한다.
 
 - [ ] **Step 5: `main`에 배선한다**
 
