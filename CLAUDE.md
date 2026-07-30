@@ -8,7 +8,14 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 
 - **배포**: `main`에 push하면 `.github/` CI가 Hugo 빌드 → GitHub Pages 공개. (피처 브랜치 push는 배포 안 됨)
 - **예약 게시용 일일 재빌드**: 같은 워크플로에 `schedule` cron(`5 22 * * *` = 07:05 KST)이 걸려 있어 매일 한 번 재빌드한다. 미래 시각(다음날 07:00) 글은 push가 없어도 이 cron으로 시각이 지난 뒤 공개된다(cron 없을 땐 push 없으면 영영 누락됐음).
-- **로컬 빌드**: `git submodule update --init`(PaperMod 테마) 후 `hugo`(extended, ≥ 0.146). 산출물 `public/`은 `.gitignore`.
+- **로컬 빌드**: `git submodule update --init`(PaperMod 테마) 후 `hugo`. 산출물 `public/`은 `.gitignore`.
+- **Hugo 버전 정본 = `.hugo-version` 한 곳**(현재 `0.164.0`, extended). CI(`pages.yml`)도, devbox 자동 회고 스크립트도 이 파일을 읽어 **같은 버전**을 깐다. 로컬/VM 빌드가 CI 빌드의 *예측치*로 성립하려면 버전이 같아야 하기 때문이다 — 다르면 두 방향으로 다 틀린다(로컬은 통과했는데 CI가 깨지거나, 로컬만 깨지고 CI는 멀쩡하거나). 어디에도 버전을 하드코딩하지 않는다. 올릴 땐 이 파일만 고치고, 올린 뒤 실제로 빌드가 되는지 확인한다.
+  - **snap으로 쓰지 않는다.** snap은 최신 하나만 주고 제멋대로 자동 갱신돼 CI와 계속 벌어진다(실제로 CI 0.147.1 vs VM 0.164.0까지 갔었다). 공식 tarball을 `~/.local/bin/hugo`로 받아 쓴다 — sudo도 필요 없다.
+    ```
+    V=$(tr -d '[:space:]' < .hugo-version)
+    curl -fsSL "https://github.com/gohugoio/hugo/releases/download/v$V/hugo_extended_${V}_linux-amd64.tar.gz" \
+      | tar -xz -C /tmp hugo && install -m755 /tmp/hugo ~/.local/bin/hugo
+    ```
 - **글 생성**: `archetypes/posts.md` 기반.
 - **작업 흐름 — 모든 변경은 프리뷰 먼저, UI/UX는 승인 후 자동 prmain**: devlog의 **모든 기능 추가·수정 작업**은 끝낸 뒤 **반드시 프리뷰(테일넷)로 보여준다** — 눈으로 확인받는 게 게이트다(승인 전 무단 머지 금지). 그중 **UI/UX**(레이아웃·CSS·테마·템플릿)는 사용자가 승인하면 그때부터 **자동으로 prmain**(push→PR→main 머지·배포)하고, 승인 뒤엔 "머지할까요"를 따로 묻지 않는다. (콘텐츠/회고 *발행*은 별개 — 자동 회고 루틴의 B-auto가 담당.)
 
@@ -17,7 +24,7 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 확정 전 구조·글을 모바일/PC에서 눈으로 보고 결정할 때 쓴다.
 
 - **필요할 때만 켠다(on-demand).** 오래 띄워두지 않는다 — 설정(`hugo.toml`) 변경은 핫리로드가 안 돼 재시작해야 하고, 장수 서버는 옛 설정으로 도는 stale 상태(=화면 깨짐)를 부른다. 검토할 때 새로 띄우고, 끝나면 내린다.
-- 준비: `git submodule update --init`(PaperMod) + hugo extended 설치(snap `--channel=extended`, ≥0.146 — apt 버전은 낡아 안 됨).
+- 준비: `git submodule update --init`(PaperMod) + hugo extended 설치(위 "배포·빌드"의 `.hugo-version` 방식. apt·snap은 쓰지 않는다 — apt는 낡고 snap은 CI와 벌어진다).
 - 띄우기(이 명령 그대로):
   ```
   hugo server --bind <tailscale-IP> --baseURL "http://<tailscale-IP>:1313/devlog/" --appendPort=false --port 1313 --disableFastRender

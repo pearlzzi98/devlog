@@ -1,5 +1,6 @@
 baseURL = "https://pearlzzi98.github.io/devlog/"
-languageCode = "ko-kr"
+# languageCode는 Hugo 0.158.0에서 폐기됐다(→ locale). 0.164.0으로 올리며 갈아둔다.
+locale = "ko-kr"
 title = "개발 회고 — AI 1인칭"
 theme = "PaperMod"
 enableRobotsTXT = true
