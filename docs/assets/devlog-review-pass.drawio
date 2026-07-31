@@ -1,0 +1,62 @@
+<mxfile><diagram name="review-pass"><mxGraphModel background="#ffffff"><root>
+<mxCell id="0"/><mxCell id="1" parent="0"/>
+
+<mxCell id="title" value="devlog — 리뷰 패스 : 초안 한 편이 발행 본문이 되기까지" style="text;html=1;fontSize=22;fontStyle=1;fontColor=#1d4e89;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="30" width="900" height="40" as="geometry"/></mxCell>
+
+<mxCell id="gh" value="결정론 하네스 — review_post()  ·  devbox VM · bash" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#f3faf3;strokeColor=#82b366;fontColor=#2e7d32;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=14;" vertex="1" parent="1"><mxGeometry x="330" y="110" width="1180" height="500" as="geometry"/></mxCell>
+
+<mxCell id="draft" value="초안&#10;generate_post 출력 본문" style="shape=note;size=14;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;align=center;verticalAlign=middle;fontSize=13;" vertex="1" parent="1"><mxGeometry x="60" y="330" width="200" height="90" as="geometry"/></mxCell>
+
+<mxCell id="rev" value="리뷰어  claude -p&#10;(도구 0개 · 편집자 역할)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="390" y="180" width="230" height="90" as="geometry"/></mxCell>
+
+<mxCell id="lint" value="lint_post(초안)&#10;결정론 검사 3종&#10;90자 · 번호리드 · 백틱" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="390" y="470" width="230" height="100" as="geometry"/></mxCell>
+
+<mxCell id="extract" value="review_revised&#10;=== REVISED === 사이 추출" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="700" y="180" width="230" height="90" as="geometry"/></mxCell>
+
+<mxCell id="sane" value="revision_sane&#10;수정본이 초안 절반 이상인가&#10;(반 토막 방지)" style="rhombus;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1000" y="150" width="240" height="150" as="geometry"/></mxCell>
+
+<mxCell id="filter" value="filter_critiques&#10;인용 스팬이 초안에 &#10;글자 그대로 있나" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="700" y="470" width="230" height="100" as="geometry"/></mxCell>
+
+<mxCell id="cap" value="상한 5건&#10;sensitive_leak ·&#10;fabricated_texture 는 예외" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1000" y="470" width="230" height="100" as="geometry"/></mxCell>
+
+<mxCell id="logc" value="log_critiques&#10;JSONL 적재 (VM 비공개)" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1290" y="470" width="200" height="100" as="geometry"/></mxCell>
+
+<mxCell id="final" value="최종 본문" style="shape=note;size=14;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;align=center;verticalAlign=middle;fontSize=14;fontStyle=1" vertex="1" parent="1"><mxGeometry x="1300" y="185" width="180" height="80" as="geometry"/></mxCell>
+
+<mxCell id="next" value="write_post_file&#10;→ 민감값 게이트&#10;→ PR" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1580" y="175" width="190" height="100" as="geometry"/></mxCell>
+
+<mxCell id="promo" value="승급으로&#10;(다음 그림)" style="rounded=1;dashed=1;fillColor=#f6f8fa;strokeColor=#d0d7de;fontColor=#57606a;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1590" y="490" width="170" height="60" as="geometry"/></mxCell>
+
+<mxCell id="inject" value="같이 넣어주는 것&#10;· writing-contract.md (계약)&#10;· writing-rules.md (승급된 규칙)&#10;· 민감값 denylist&#10;· 어제 글 (수사 틀 겹침 판정용)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;align=left;spacingLeft=10;fontSize=12;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="40" y="120" width="250" height="130" as="geometry"/></mxCell>
+
+<mxCell id="failopen" value="fail-open — 이 중 무엇이 나든 초안이 그대로 발행된다&#10;· claude 호출 실패     · === REVISED === 없음(형식 파괴)&#10;· 수정본이 반 토막      · RETRO_REVIEW=0 (롤백 스위치)&#10;· 프롬프트 파일 없음    · mktemp/date 실패&#10;자기개선은 발행에 종속된다. 리뷰가 깨져도 그날 글은 나간다." style="rounded=1;fillColor=#fdeaea;strokeColor=#c0392b;fontColor=#7b241c;align=left;spacingLeft=12;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="330" y="650" width="640" height="140" as="geometry"/></mxCell>
+
+<mxCell id="legend" value="색:  ■ 파랑 = 데이터(본문)   ■ 초록 = 결정론 bash   ■ 보라 = AI 호출   ■ 주황 = 프롬프트에 주입되는 자료   ■ 빨강 = fail-open 경로&#10;리뷰어는 모델 판단으로, lint_post는 정규식으로 결함을 찾지만 둘 다 똑같은 `CRITIQUE: 코드 | &quot;인용&quot; | 설명` 한 줄을 낸다 — 그래서 한 관으로 흐른다.&#10;인용 스팬이 초안에 글자 그대로 없으면 그 지적은 버려진다. 지어낸 지적을 &apos;쓰지 말라&apos;가 아니라 &apos;못 만들게&apos; 한 것이다." style="rounded=1;fillColor=#f6f8fa;strokeColor=#d0d7de;fontColor=#1f2328;align=left;spacingLeft=14;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="40" y="830" width="1740" height="110" as="geometry"/></mxCell>
+
+<mxCell id="e1" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" parent="1" source="draft" target="rev" value="초안"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e2" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" parent="1" source="draft" target="lint" value="초안"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e3" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#6a1b9a;fontColor=#6a1b9a;fontSize=12;" edge="1" parent="1" source="rev" target="extract" value="수정본"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e4" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;" edge="1" parent="1" source="extract" target="sane"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="e5" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;exitX=1;exitY=0.5;" edge="1" parent="1" source="sane" target="final" value="통과 → 수정본"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e6" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#c0392b;fontColor=#c0392b;fontSize=12;exitX=0.5;exitY=1;entryX=0.25;entryY=1;dashed=1;" edge="1" parent="1" source="sane" target="final" value="미달 → 초안 그대로"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1120" y="350"/><mxPoint x="1345" y="350"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e7" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#6a1b9a;fontColor=#6a1b9a;fontSize=12;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rev" target="filter" value="CRITIQUE 줄"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="505" y="380"/><mxPoint x="815" y="380"/></Array></mxGeometry></mxCell>
+
+<mxCell id="e8" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;" edge="1" parent="1" source="lint" target="filter" value="같은 형식"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e9" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;" edge="1" parent="1" source="filter" target="cap" value="살아남은 것"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="e10" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;" edge="1" parent="1" source="cap" target="logc"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="e11" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;" edge="1" parent="1" source="final" target="next"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="e12" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#57606a;fontColor=#57606a;fontSize=12;dashed=1;" edge="1" parent="1" source="logc" target="promo"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="e13" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#9a6a00;fontColor=#9a6a00;fontSize=12;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.2;" edge="1" parent="1" source="inject" target="rev"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+</root></mxGraphModel></diagram></mxfile>

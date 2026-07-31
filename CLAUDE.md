@@ -8,7 +8,14 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 
 - **배포**: `main`에 push하면 `.github/` CI가 Hugo 빌드 → GitHub Pages 공개. (피처 브랜치 push는 배포 안 됨)
 - **예약 게시용 일일 재빌드**: 같은 워크플로에 `schedule` cron(`5 22 * * *` = 07:05 KST)이 걸려 있어 매일 한 번 재빌드한다. 미래 시각(다음날 07:00) 글은 push가 없어도 이 cron으로 시각이 지난 뒤 공개된다(cron 없을 땐 push 없으면 영영 누락됐음).
-- **로컬 빌드**: `git submodule update --init`(PaperMod 테마) 후 `hugo`(extended, ≥ 0.146). 산출물 `public/`은 `.gitignore`.
+- **로컬 빌드**: `git submodule update --init`(PaperMod 테마) 후 `hugo`. 산출물 `public/`은 `.gitignore`.
+- **Hugo 버전 정본 = `.hugo-version` 한 곳**(현재 `0.164.0`, extended). CI(`pages.yml`)도, devbox 자동 회고 스크립트도 이 파일을 읽어 **같은 버전**을 깐다. 로컬/VM 빌드가 CI 빌드의 *예측치*로 성립하려면 버전이 같아야 하기 때문이다 — 다르면 두 방향으로 다 틀린다(로컬은 통과했는데 CI가 깨지거나, 로컬만 깨지고 CI는 멀쩡하거나). 어디에도 버전을 하드코딩하지 않는다. 올릴 땐 이 파일만 고치고, 올린 뒤 실제로 빌드가 되는지 확인한다.
+  - **snap으로 쓰지 않는다.** snap은 최신 하나만 주고 제멋대로 자동 갱신돼 CI와 계속 벌어진다(실제로 CI 0.147.1 vs VM 0.164.0까지 갔었다). 공식 tarball을 `~/.local/bin/hugo`로 받아 쓴다 — sudo도 필요 없다.
+    ```
+    V=$(tr -d '[:space:]' < .hugo-version)
+    curl -fsSL "https://github.com/gohugoio/hugo/releases/download/v$V/hugo_extended_${V}_linux-amd64.tar.gz" \
+      | tar -xz -C /tmp hugo && install -m755 /tmp/hugo ~/.local/bin/hugo
+    ```
 - **글 생성**: `archetypes/posts.md` 기반.
 - **작업 흐름 — 모든 변경은 프리뷰 먼저, UI/UX는 승인 후 자동 prmain**: devlog의 **모든 기능 추가·수정 작업**은 끝낸 뒤 **반드시 프리뷰(테일넷)로 보여준다** — 눈으로 확인받는 게 게이트다(승인 전 무단 머지 금지). 그중 **UI/UX**(레이아웃·CSS·테마·템플릿)는 사용자가 승인하면 그때부터 **자동으로 prmain**(push→PR→main 머지·배포)하고, 승인 뒤엔 "머지할까요"를 따로 묻지 않는다. (콘텐츠/회고 *발행*은 별개 — 자동 회고 루틴의 B-auto가 담당.)
 
@@ -17,7 +24,7 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 확정 전 구조·글을 모바일/PC에서 눈으로 보고 결정할 때 쓴다.
 
 - **필요할 때만 켠다(on-demand).** 오래 띄워두지 않는다 — 설정(`hugo.toml`) 변경은 핫리로드가 안 돼 재시작해야 하고, 장수 서버는 옛 설정으로 도는 stale 상태(=화면 깨짐)를 부른다. 검토할 때 새로 띄우고, 끝나면 내린다.
-- 준비: `git submodule update --init`(PaperMod) + hugo extended 설치(snap `--channel=extended`, ≥0.146 — apt 버전은 낡아 안 됨).
+- 준비: `git submodule update --init`(PaperMod) + hugo extended 설치(위 "배포·빌드"의 `.hugo-version` 방식. apt·snap은 쓰지 않는다 — apt는 낡고 snap은 CI와 벌어진다).
 - 띄우기(이 명령 그대로):
   ```
   hugo server --bind <tailscale-IP> --baseURL "http://<tailscale-IP>:1313/devlog/" --appendPort=false --port 1313 --disableFastRender
@@ -32,19 +39,9 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 
 - **프로젝트·하루 = 파일 1개**: `content/posts/<repo>/YYYY-MM-DD.md`. 한 날에 두 프로젝트를 했으면 파일 2개(각 폴더에). 디렉토리(`<repo>`) = 프로젝트 = Hugo 섹션 → `/posts/<repo>/`에서 그 프로젝트 글이 시간순으로 자동 모인다. 각 repo 폴더에 `_index.md`(섹션 제목)를 둔다.
   - (구 모델: "하루=파일 1개" 다이제스트 + 본문 `## <repo>` 섹션. 폐기. 기존 글의 `## <repo>` 래퍼·"오늘은 … 일했다" 도입부는 전 글에서 이미 제거함.)
-- 파일이 곧 프로젝트라 본문 `## <repo>` 래퍼는 두지 않는다. `### 한 일` / `### 막힌 것, 고친 것` / `### 돌아보며`를 바로 둔다.
 - front-matter `projects: ["<repo>"]`는 폴더명과 동일한 단일값(기록용). 분류·배지는 디렉토리(`.CurrentSection`)가 정본이라 기능상 필수는 아니다. `tags`는 쓰지 않는다(taxonomy 끔, 아래 "분류·브라우즈").
 - **게시 시각 규칙**: 파일명/제목은 **작업한 날**(`YYYY-MM-DD`), front-matter `date`(=게시 시각)는 그 **다음날 07:00 KST**(`<작업일+1>T07:00:00+09:00`). 즉 그날의 회고는 다음날 아침 7시에 올라간다.
 - 과거 작업 백필도 같은 규칙. 게시일이 미래면 빌드에서 자동 제외되고, 그 시각이 지난 뒤 일일 cron 재빌드(위 "배포·빌드")로 공개된다(오늘 작업분은 내일 07:00에 공개됨).
-
-### 소스 — docs/todo(사실) + transcript(텍스처)
-
-**모든 프로젝트**의 회고글은 **두 소스를 반드시 합쳐** 쓴다(필수). docs/todo 단독으로 쓰지 않는다 — 잡는 게 서로 달라 보완 관계다. (예외: ts가 없는 과거 백필만 docs/todo 단독 허용. ts가 존재하면 반드시 포함.)
-
-- **`~/projects/<repo>/docs/todo/YYYY-MM-DD_*.md`** (repo 안 기술 로그) — "무엇을 했나"의 정제된 **사실**, `### 한 일`·`### 막힌 것, 고친 것`의 골격. **가장 우선하는 사실 소스**(작성자가 하루로 묶어둠). 같은 날 파일 여러 개면 한 편으로 병합. 단 docs/todo는 `/fin` 돌린 날에만 생기므로 그 자체가 **날짜 앵커는 아니다**(아래 매핑 절).
-- **세션 transcript**(`~/.claude/projects/<인코딩된-작업경로>/<sessionUUID>.jsonl`) — **사람 텍스처**: 사용자 간섭·정정·재촉·감정, 헛다리 짚은 순간. `### 돌아보며`의 진짜 재료 + `### 막힌 것`의 결. 보이스 규칙 "지어내지 않는다"를 만족시키는 정본(간섭은 ts에 실제로 박혀 있다).
-- 사실과 텍스처가 충돌하면 **docs/todo·코드가 우선**. ts는 "어떻게 느꼈나"만 가져온다.
-- ts는 크다(MB·수백 줄) → 전부 읽지 말고 **사람 메시지 + 핵심 턴만 발췌**. 민감값(IP·경로·토큰·내부 호스트명·실사용자 닉)은 ts 발췌에 특히 엄격히 가린다(아래 "민감값").
 
 ### transcript ↔ devlog 날짜 매핑
 
@@ -64,14 +61,12 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 - **OG/공유 카드**: 전역 `static/og.png`(1200×630) + `hugo.toml [params] images=["og.png"]`. PaperMod가 글에 cover/images 없으면 이걸 fallback으로 `og:image`·`twitter:image`(summary_large_image)에 출력. ⚠️ PaperMod는 **production 빌드에서만** og 메타를 내보낸다(`hugo server` dev엔 안 나옴 — 정상). 카드 소스·재생성: `tools/og/card.html` → `tools/og/render.sh`(헤드리스 chromium).
 - **이미지 임베드 shortcode**(`layouts/shortcodes/img.html`): baseURL 경로(`/devlog/`)를 `relURL`로 안전히 붙여 마크다운에서 이미지를 넣을 때 쓴다(goldmark `unsafe` 안 켜고).
 
-## 글쓰기 보이스
+## 글쓰기 계약 (정본: `docs/writing-contract.md`)
 
-- **1인칭**, **쉬운 일상 한국어**(어려운/문어적 단어 금지 — 예: "소회" 금지, "돌아보며"로).
-- **짧은 문장** — 길어지면 끊는다.
-- 백필 포스트 섹션: `### 한 일`(구체적으로) / `### 막힌 것, 고친 것`(있을 때만) / `### 돌아보며`(필수 — 건조한 교훈요약이 아닌 AI 1인칭의 진짜 느낌).
-- **본문 포맷(전 글 일관)**: 본문은 `### 한 일`부터 시작(도입부 문장·`## <repo>` 래퍼·인용구 도입부 금지). `### 한 일`은 **작업 갈래마다 볼드 리드로 시작**한다 — 설명이 길거나 하위 불릿이 따르면 블록형(`**리드.**` 줄 + 본문), 짧은 항목 나열이면 불릿형(`- **리드** — …`). 번호 매김(`**1) …**`)은 쓰지 않는다. `### 막힌 것, 고친 것`은 여러 건이면 불릿(증상→원인→고침), 한 건이면 짧은 문단. `### 돌아보며`는 산문만.
-- 로그에 없는 "사용자 간섭/실수/감정"은 지어내지 않는다.
-- 고유명사 정확히(예: 카카오 봇은 "파퀘봇"). "봇을 만들다"(○) / "세우다"(×).
+글 자체의 규칙(보이스·본문 포맷·듀얼 소스·민감값)은 **`docs/writing-contract.md`가 정본**이다.
+자동 회고 생성기와 리뷰어는 CLAUDE.md가 아니라 그 파일만 주입받는다(컨텍스트 고정비 — 이 문서의
+62%는 글쓰기와 무관하다). **글쓰기 규칙을 고칠 땐 그 파일을 고친다.** 여기 중복해 적지 않는다.
+승급된 규칙은 `docs/writing-rules.md`(기계가 씀).
 
 ## AI 댓글 (Codex·Claude 자동)
 
@@ -83,8 +78,4 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 - **가드 CI**: `.github/workflows/comments-guard.yml` — `data/comments` PR에서 스키마·턴캡·작성자교대·sig 형식·IPv4 검열(**키 없이 구조만**; 서명은 VM 키로만 검증). 관측용(외부 PR은 write 권한 필요해 어차피 사람 머지).
 - **자가진화**: `devbox vm/devlog-comment-evolve.sh` — 신뢰신호(게이트 거부 사유·actor별 skip율·사람 수정 커밋; 글 본문은 인젝션 위험이라 제외) 집계 → 지침 개선 **제안**. 주간(화 07:00 KST) 타이머가 제안 PR 자동 오픈, **채택(머지)은 사람 게이트**(자동머지 X = 자기수정 루프 방지). 지침 정본: `docs/comments/{codex,claude}-instructions.md`.
 - **수동 슬래시 명령**: `/devlog-comment`(봇 실행), `/devlog-comment-evolve`(제안) — 기본 dry-run, `apply`만 발행. (이 VM은 `.claude/commands`가 전역화되므로 명령 정본은 `devbox/dotfiles/commands`.)
-- 댓글도 아래 **글쓰기 보이스**(존댓말·쉬운 한국어)·**민감값** 규칙을 따른다. AI 자기언급 금지.
-
-## 민감값 (공개 사이트)
-
-실 IP·도메인·토큰·Tailscale/메시 IP·내부 호스트명·**실사용자 닉네임**·시크릿을 **본문에 노출 금지**. 일반화한다(IP→"고정 공인 IP", 도메인→"전용 도메인" 등). 가릴 값 목록은 repo에 커밋하지 않는다(목록 자체가 누설).
+- 댓글도 `docs/writing-contract.md`의 **보이스**(존댓말·쉬운 한국어)·**민감값** 규칙을 따른다. AI 자기언급 금지. 가릴 값 목록은 repo에 커밋하지 않는다(목록 자체가 누설).

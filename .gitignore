@@ -3,3 +3,6 @@
 .hugo_build.lock
 .DS_Store
 /node_modules/
+
+# SDD 실행 작업공간(로컬 전용)
+.superpowers/

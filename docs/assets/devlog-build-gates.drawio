@@ -1,0 +1,35 @@
+<mxfile><diagram name="build-gates"><mxGraphModel background="#ffffff"><root>
+<mxCell id="0"/><mxCell id="1" parent="0"/>
+
+<mxCell id="title" value="devlog — 빌드·배포 게이트 : 버전 정본 하나로 VM과 CI를 묶는다" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#1d4e89;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="25" width="1000" height="34" as="geometry"/></mxCell>
+
+<mxCell id="pin" value="devlog  .hugo-version  =  0.164.0&#10;버전 정본은 이 파일 하나뿐" style="shape=note;size=16;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;align=center;verticalAlign=middle;fontSize=14;fontStyle=1" vertex="1" parent="1"><mxGeometry x="620" y="100" width="340" height="90" as="geometry"/></mxCell>
+
+<mxCell id="gvm" value="VM (devbox) — 발행 전 예측" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#f1f8f0;strokeColor=#82b366;fontColor=#2e7d32;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;" vertex="1" parent="1"><mxGeometry x="40" y="250" width="700" height="200" as="geometry"/></mxCell>
+<mxCell id="ensure" value="ensure_hugo&#10;설치됨 ≠ 핀 → 다시 깐다&#10;공식 tarball → ~/.local/bin/hugo&#10;sudo·snap 안 씀" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="70" y="300" width="300" height="120" as="geometry"/></mxCell>
+<mxCell id="vmbuild" value="hugo 빌드 (⑥ 게이트)&#10;부재 → unverified&#10;실패 → broken (글이 깬다)&#10;통과 → ok" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="410" y="300" width="300" height="120" as="geometry"/></mxCell>
+
+<mxCell id="gci" value="CI (GitHub Actions) — 진짜 배포" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#f0f6ff;strokeColor=#6c8ebf;fontColor=#1d4e89;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;" vertex="1" parent="1"><mxGeometry x="840" y="250" width="700" height="200" as="geometry"/></mxCell>
+<mxCell id="ciinst" value="pages.yml&#10;.hugo-version 읽어 deb 설치&#10;(하드코딩 없음)" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="870" y="300" width="300" height="120" as="geometry"/></mxCell>
+<mxCell id="cibuild" value="build job&#10;hugo --minify&#10;깨지면 여기서 멈춘다" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1210" y="300" width="300" height="120" as="geometry"/></mxCell>
+
+<mxCell id="deploy" value="deploy job  (needs: build)&#10;→ GitHub Pages 공개" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1210" y="530" width="300" height="90" as="geometry"/></mxCell>
+
+<mxCell id="cron" value="일일 cron 07:05 KST&#10;미래 시각 글을 뒤늦게 공개&#10;(같은 워크플로를 다시 돌린다)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="870" y="530" width="300" height="90" as="geometry"/></mxCell>
+
+<mxCell id="fail" value="빌드가 깨지면 — 한 편이 아니라 사이트 전체가 멈춘다&#10;· deploy 가 needs: build 라 배포 자체가 안 돈다 → 사이트가 마지막 정상본에 얼어붙는다&#10;· 일일 cron 재빌드도 같이 죽는다 → 이미 머지된 미래 날짜 글이 영영 공개되지 않는다&#10;· 무인 운영이라 아무도 안 본다. Actions 의 빨간 X 만 남는다&#10;· main 에 들어간 커밋이라 되돌리려면 revert 가 필요하다" style="rounded=1;fillColor=#fdeaea;strokeColor=#c0392b;fontColor=#7b241c;fontSize=12;align=left;spacingLeft=14;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="40" y="500" width="760" height="150" as="geometry"/></mxCell>
+
+<mxCell id="legend" value="버전이 다르면 VM 빌드가 CI 빌드의 예측치로 성립하지 않는다. 두 방향으로 다 틀린다 — VM은 통과했는데 CI가 깨지거나, VM만 깨지고 CI는 멀쩡하거나.&#10;&#10;관측 기록 (2026-06-17 ~ 07-29 · pages.yml 119회):  성공 116 / 실패 3.&#10;· 2건 — CI 의 hugo 가 0.128.0 이라 PaperMod 최소 요구(0.146.0)에 못 미쳐 깨짐 → &lt;버전 어긋남&gt;&#10;· 1건 — build 는 성공, deploy 단계 실패 → &lt;인프라&gt;&#10;· 0건 — 글 내용 때문에 깨진 적은 아직 없다. 위 빨간 상자는 재현은 되지만(코드펜스 안 shortcode 도 죽는다) 아직 일어난 적 없는 위험이다.&#10;그래서 이 프로젝트의 실제 고장 모드는 콘텐츠가 아니라 &apos;hugo 환경&apos;이었다 — 핀 하나로 묶고 부재 시 스스로 다시 까는 쪽이 실효가 크다.&#10;현재 ⑥ 게이트의 broken 은 WARN 일 뿐 발행을 막지 않는다. PR 본문에 경고만 붙는다." style="rounded=1;fillColor=#f6f8fa;strokeColor=#d0d7de;fontColor=#1f2328;align=left;spacingLeft=14;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="40" y="700" width="1500" height="180" as="geometry"/></mxCell>
+
+<mxCell id="p1" value="핀을 읽는다" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="pin" target="ensure"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="220" y="145"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="p2" value="같은 파일" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="pin" target="ciinst"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1020" y="145"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="v1" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;" edge="1" parent="1" source="ensure" target="vmbuild"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="c1" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;" edge="1" parent="1" source="ciinst" target="cibuild"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="c2" value="통과해야만" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;" edge="1" parent="1" source="cibuild" target="deploy"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+<mxCell id="c3" value="매일 다시" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#9a6a00;fontColor=#9a6a00;fontSize=12;dashed=1;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="1" source="cron" target="cibuild"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1020" y="470"/><mxPoint x="1170" y="470"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="x1" value="같은 버전이라야 예측이 성립" style="endArrow=block;startArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#00838f;fontColor=#00838f;fontSize=12;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="vmbuild" target="ciinst"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+</root></mxGraphModel></diagram></mxfile>

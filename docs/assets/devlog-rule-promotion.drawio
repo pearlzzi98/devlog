@@ -1,0 +1,51 @@
+<mxfile><diagram name="rule-promotion"><mxGraphModel background="#ffffff"><root>
+<mxCell id="0"/><mxCell id="1" parent="0"/>
+
+<mxCell id="title" value="devlog — 규칙 승급 : 여러 편에 걸친 되먹임, 그리고 기계와 사람의 경계" style="text;html=1;fontSize=22;fontStyle=1;fontColor=#1d4e89;align=left;" vertex="1" parent="1"><mxGeometry x="40" y="30" width="1100" height="40" as="geometry"/></mxCell>
+
+<mxCell id="gm" value="기계가 하는 일 — 계량과 선택 (자동, 매일)" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#f0f6ff;strokeColor=#6c8ebf;fontColor=#1d4e89;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=14;" vertex="1" parent="1"><mxGeometry x="40" y="110" width="1540" height="440" as="geometry"/></mxCell>
+
+<mxCell id="jsonl" value="CRITIQUES_FILE&#10;JSONL · VM 비공개&#10;(인용 원문은 repo에 안 간다)" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="80" y="180" width="200" height="120" as="geometry"/></mxCell>
+
+<mxCell id="promote" value="promote_candidates&#10;최근 7편 중 2편 이상 나온 코드&#10;한 편에서 같은 코드는 1회로 접음" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="340" y="185" width="250" height="110" as="geometry"/></mxCell>
+
+<mxCell id="dec" value="rule_text(코드)&#10;어휘에 있는&#10;코드인가" style="rhombus;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="650" y="165" width="220" height="150" as="geometry"/></mxCell>
+
+<mxCell id="rules" value="docs/writing-rules.md&#10;글과 함께 커밋 → main&#10;상한 15줄 · 오래 안 쓰인 줄부터 밀림" style="shape=note;size=14;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#1f2328;align=center;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="940" y="180" width="240" height="120" as="geometry"/></mxCell>
+
+<mxCell id="inject" value="다음날 프롬프트에 주입&#10;승급된 규칙 + 계약 +&#10;리뷰 지침" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2328;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1270" y="180" width="240" height="120" as="geometry"/></mxCell>
+
+<mxCell id="dead" value="other:… → 막다른 길&#10;로그엔 쌓이지만 영영 규칙이 못 된다&#10;기계는 새 규칙을 지어낼 수 없다" style="rounded=1;fillColor=#fdeaea;strokeColor=#c0392b;fontColor=#7b241c;fontSize=12;" vertex="1" parent="1"><mxGeometry x="320" y="365" width="290" height="100" as="geometry"/></mxCell>
+
+<mxCell id="loop" value="리뷰 패스 (앞 그림)" style="rounded=1;dashed=1;fillColor=#f6f8fa;strokeColor=#d0d7de;fontColor=#57606a;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1270" y="370" width="240" height="70" as="geometry"/></mxCell>
+
+<mxCell id="gh" value="사람이 하는 일 — 저작 (기계는 이 넷 중 무엇도 건드리지 않는다)" style="rounded=1;dashed=1;dashPattern=6 6;fillColor=#fff7ed;strokeColor=#d79b00;fontColor=#9a6a00;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=14;" vertex="1" parent="1"><mxGeometry x="40" y="640" width="1540" height="200" as="geometry"/></mxCell>
+
+<mxCell id="h1" value="docs/writing-contract.md&#10;보이스·본문 포맷 정본&#10;생성기·리뷰어가 둘 다 읽는다" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="80" y="700" width="340" height="110" as="geometry"/></mxCell>
+
+<mxCell id="h2" value="vm/devlog-review.prompt.md&#10;어휘 정의 + 고칠 때의 형태&#10;(예: 비유어는 괄호로)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="460" y="700" width="340" height="110" as="geometry"/></mxCell>
+
+<mxCell id="h3" value="rule_text()  — bash case 23개&#10;승급될 수 있는 문장의 전부&#10;여기 없는 코드는 승급 불가" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="840" y="700" width="340" height="110" as="geometry"/></mxCell>
+
+<mxCell id="h4" value="lint_post()  — 정규식 검사&#10;기계적으로 판정 가능한 결함&#10;(90자 · 번호리드 · 백틱)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2328;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1220" y="700" width="340" height="110" as="geometry"/></mxCell>
+
+<mxCell id="legend" value="한 줄로:  기계는 &apos;어떤 규칙이 지금 켜져 있어야 하나&apos;를 정하고, 사람은 &apos;애초에 어떤 규칙이 존재할 수 있나&apos;를 정한다. 기계는 학습기가 아니라 온도조절기다.&#10;그래서 &apos;줄표 말고 괄호로&apos; 같은 판단에는 고리가 스스로 도달하지 못한다 — 되풀이되는 것을 세는 일과, 그럼 어떻게 써야 하나를 정하는 일은 다르다.&#10;새 문제를 봤을 때 사람이 하는 결정:   정규식으로 잡히나 → lint_post   ·   판단이 필요한가 → 어휘 + rule_text   ·   애초에 저지르지 말게 → writing-contract.md&#10;승급은 &apos;한 번 나쁨&apos;이 아니라 &apos;되풀이되는 버릇&apos;만 잡는다. 나이로는 지우지 않는다 — 잘 듣는 규칙은 재발이 멈추므로, 나이로 지우면 켜고 끄기를 반복한다." style="rounded=1;fillColor=#f6f8fa;strokeColor=#d0d7de;fontColor=#1f2328;align=left;spacingLeft=14;verticalAlign=middle;fontSize=12;" vertex="1" parent="1"><mxGeometry x="40" y="880" width="1540" height="130" as="geometry"/></mxCell>
+
+<mxCell id="m1" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;" edge="1" parent="1" source="jsonl" target="promote"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="m2" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;" edge="1" parent="1" source="promote" target="dec" value="후보 코드"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="m3" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#2e7d32;fontColor=#2e7d32;fontSize=12;" edge="1" parent="1" source="dec" target="rules" value="있음 → 줄 추가·보강"><mxGeometry relative="1" as="geometry"><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="m4" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#c0392b;fontColor=#c0392b;fontSize=12;dashed=1;exitX=0.5;exitY=1;entryX=1;entryY=0.3;" edge="1" parent="1" source="dec" target="dead" value="없음"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="760" y="395"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="m5" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;" edge="1" parent="1" source="rules" target="inject"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="m6" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#1565c0;fontColor=#1565c0;fontSize=12;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="inject" target="loop"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+<mxCell id="m7" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#00838f;fontColor=#00838f;fontSize=12;exitX=0;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="loop" target="jsonl" value="다음 글의 새 지적이 다시 쌓인다"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1180" y="510"/><mxPoint x="180" y="510"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+<mxCell id="hm3" style="endArrow=block;rounded=1;labelBackgroundColor=#ffffff;strokeColor=#9a6a00;fontColor=#9a6a00;fontSize=12;dashed=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="h3" target="dec" value="어휘를 정의한다"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1010" y="600"/><mxPoint x="760" y="600"/></Array><mxPoint as="offset" x="0" y="-12"/></mxGeometry></mxCell>
+
+
+</root></mxGraphModel></diagram></mxfile>
