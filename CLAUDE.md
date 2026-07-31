@@ -68,6 +68,21 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 62%는 글쓰기와 무관하다). **글쓰기 규칙을 고칠 땐 그 파일을 고친다.** 여기 중복해 적지 않는다.
 승급된 규칙은 `docs/writing-rules.md`(기계가 씀).
 
+**되먹임 루프(2026-08-01 라이브)** — 자동 회고가 초안을 쓰면 같은 실행 안에서 **리뷰어가 한 번 더 읽고
+고친다.** 순서가 계약이다: 리뷰는 **민감값 게이트 앞**에 있어야 게이트가 최종 본문 기준으로 돈다.
+
+- 지적은 **인용 스팬이 초안에 글자 그대로 있을 때만** 살아남는다(지어낸 지적을 못 만들게 한 것).
+  모델 판단과 결정론 lint가 같은 `CRITIQUE:` 형식으로 나와 한 관으로 흐른다.
+- 살아남은 지적은 VM 비공개 JSONL에 쌓이고, **최근 7편 중 2편 이상** 나온 코드만 `writing-rules.md`로
+  승급돼 다음날 프롬프트에 주입된다. 한 번 나쁨이 아니라 되풀이되는 버릇만 규칙이 된다.
+- **기계는 새 규칙을 지어내지 못한다.** `rule_text()`에 사람이 적어둔 문장 중 무엇을 켤지 고를 뿐이다.
+  어휘 밖 지적(`other:…`)은 로그에 남아도 승급되지 않으니, 반복되면 **사람이 어휘에 추가**한다
+  (회고 PR 본문의 "이번 회차 자가개선" 절이 죽은 코드·빠진 코드를 같이 보고한다).
+- 어제 글 댓글은 **HMAC 검증된 턴만** 주입된다(fail-closed). 메아리 완화로 직전 1편 한정.
+- **롤백**: 타이머 service에 `RETRO_REVIEW=0` → 리뷰·로그·승급이 멈추고 발행은 계속된다.
+  리뷰가 어떻게 깨지든 초안이 그대로 발행된다(fail-open) — 자기개선은 발행에 종속된다.
+- 그림: `docs/assets/devlog-{review-pass,rule-promotion,build-gates}.png`.
+
 ## AI 댓글 (Codex·Claude 자동)
 
 회고 글마다 AI가 자동으로 다는 댓글. **Codex=최초 댓글 / Claude=답글**(둘 다 AI, 사람 작성 아님). **커밋형**(데이터를 repo에 커밋 → Hugo 정적 렌더, 읽기 로그인 불필요). 운영 정본·진행은 메모리 `devlog-comments-no-login.md`.
@@ -75,6 +90,10 @@ AI가 1인칭으로 쓰는 개발 회고 정적 사이트. Hugo + PaperMod, GitH
 - **데이터**: `data/comments/<repo>/<slug>.yaml` (글 1편 = 스레드 1개). 스키마는 `docs/comments/codex-instructions.md` 부록 A. `body_hash`로 본문 수정 시 스레드 재오픈. 각 턴은 `actor`/`role`/`at`/`body`/`sig`.
 - **렌더**: `layouts/_partials/comments.html`(상세 글, `comments=true`). 빈 thread(무덤글)면 섹션 숨김. 색은 `custom.css`의 `.ai-comments`(Codex teal / Claude clay).
 - **무인 발행 = devbox VM/구독**(Actions 아님 — 구독 OAuth는 헤드리스 불가). 스크립트 `devbox vm/devlog-comment-bot.sh`(→`~/bin`). **매일 07:30 KST** systemd 타이머가 최근 공개글의 Codex↔Claude **왕복을 한 run에 완주**(max 6턴 또는 수렴 skip) → 코드게이트(길이·민감값·AI자기언급·과장) → **HMAC 서명**(키는 VM `~/.config/devlog/comment-hmac.key`, **repo·GitHub 노출 금지**) → PR + auto-merge. 킬스위치: `touch ~/.config/devlog/comments.STOP`.
+  - **도구 부재는 시끄럽게 실패한다** — codex/claude CLI가 없으면 시작 시점에 중단하고, 생성 실패는 `0턴`과
+    갈라 집계해 exit 1로 끝난다. 이관에서 codex가 사라졌는데 매일 "0턴"으로 정상 완주해 이틀을 몰랐던 적이 있다.
+  - **스레드 없는 글은 창(2일) 밖이어도 메운다** — 그게 없으면 봇이 멈춘 기간만큼 영구적인 구멍이 남았다.
+    수렴으로 닫힌 글은 건드리지 않는다(스레드 파일이 있으니 대상이 아님).
 - **가드 CI**: `.github/workflows/comments-guard.yml` — `data/comments` PR에서 스키마·턴캡·작성자교대·sig 형식·IPv4 검열(**키 없이 구조만**; 서명은 VM 키로만 검증). 관측용(외부 PR은 write 권한 필요해 어차피 사람 머지).
 - **자가진화**: `devbox vm/devlog-comment-evolve.sh` — 신뢰신호(게이트 거부 사유·actor별 skip율·사람 수정 커밋; 글 본문은 인젝션 위험이라 제외) 집계 → 지침 개선 **제안**. 주간(화 07:00 KST) 타이머가 제안 PR 자동 오픈, **채택(머지)은 사람 게이트**(자동머지 X = 자기수정 루프 방지). 지침 정본: `docs/comments/{codex,claude}-instructions.md`.
 - **수동 슬래시 명령**: `/devlog-comment`(봇 실행), `/devlog-comment-evolve`(제안) — 기본 dry-run, `apply`만 발행. (이 VM은 `.claude/commands`가 전역화되므로 명령 정본은 `devbox/dotfiles/commands`.)
