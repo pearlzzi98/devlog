@@ -43,6 +43,24 @@ summary: "그날 그 프로젝트 한 줄 요약"
 
 ![devlog 자동 회고 흐름](docs/assets/devlog-auto-retro-flow.png)
 
+#### ④ 리뷰 패스 — 초안이 발행 본문이 되기까지
+
+생성한 초안을 같은 실행 안에서 한 번 더 읽고 고친다. 모델이 낸 지적과 `lint_post`의 정규식 검사가 **똑같은 `CRITIQUE:` 한 줄 형식**으로 나와 한 관으로 흐른다. 인용 스팬이 초안에 글자 그대로 없으면 그 지적은 버려진다 — 지어낸 지적을 *쓰지 말라*가 아니라 *못 만들게* 한 것이다. 리뷰가 어떻게 깨지든 초안이 그대로 발행된다(**fail-open**). 리뷰는 민감값 게이트 **앞**에 있어야 한다 — 게이트가 최종 본문 기준으로 돌아야 하기 때문이다. (소스: [docs/assets/devlog-review-pass.drawio](docs/assets/devlog-review-pass.drawio))
+
+![devlog 리뷰 패스](docs/assets/devlog-review-pass.png)
+
+#### 규칙 승급 — 여러 편에 걸친 되먹임, 그리고 사람과의 경계
+
+지적은 VM 비공개 JSONL에 쌓이고, **최근 7편 중 2편 이상**에서 나온 코드만 `docs/writing-rules.md`로 승급돼 다음날 프롬프트에 주입된다. '한 번 나쁨'이 아니라 '되풀이되는 버릇'만 규칙이 된다. 다만 기계는 **새 규칙을 지어내지 못한다** — `rule_text()`에 사람이 적어둔 문장 중 무엇을 켤지 고를 뿐이다. 기계는 *어떤 규칙이 지금 켜져 있어야 하나*를, 사람은 *애초에 어떤 규칙이 존재할 수 있나*를 정한다. (소스: [docs/assets/devlog-rule-promotion.drawio](docs/assets/devlog-rule-promotion.drawio))
+
+![devlog 규칙 승급](docs/assets/devlog-rule-promotion.png)
+
+#### 빌드·배포 게이트 — 버전 정본 하나
+
+VM의 빌드 검증은 CI 빌드의 *예측치*라서, 둘의 hugo가 다르면 예측이 성립하지 않는다. 그래서 [`.hugo-version`](.hugo-version) 한 파일을 CI(`pages.yml`)와 devbox 하네스가 **같이 읽는다**. snap은 쓰지 않는다 — 최신 하나만 주고 자동 갱신돼 CI 핀에서 계속 멀어지기 때문이다. (소스: [docs/assets/devlog-build-gates.drawio](docs/assets/devlog-build-gates.drawio))
+
+![devlog 빌드·배포 게이트](docs/assets/devlog-build-gates.png)
+
 - 홈 상단 **토글**: 🗂 프로젝트별(폴더 그룹, **기본**) / ☰ 리스트(전체 시간순). 선택은 브라우저에 기억된다.
 - 리스트 카드의 **프로젝트 배지**를 누르면 그 프로젝트(`/posts/<repo>/`) 글만 본다. 배지는 **프로젝트별 고유색**이라 색만으로 구분된다(색 매핑은 `custom.css`의 `.proj-badge[data-proj]`).
 - 상세 글: 상단에 **프로젝트 배지(왼쪽) · `목록 →`(오른쪽)**, 하단에 떠 있는 **빠른이동 바**(목록 · 프로젝트 섹션 · 이전글 · 다음글 — 이전/다음은 발행시간 순). 구현은 `_partials/breadcrumbs.html`·`_partials/float_nav.html`.
