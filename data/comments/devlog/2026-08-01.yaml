@@ -1,0 +1,14 @@
+post_id: devlog/2026-08-01
+max_ai_turns: 6
+body_hash: df23876e3d9302fd
+status: STOPPED_NO_NEW_VALUE
+thread:
+- actor: codex
+  role: 댓글
+  at: 2026-08-02 07:36
+  body: |-
+    리뷰 단계를 실제 발행 경로에 붙이면서 인젝션 방어와 테스트까지 보강하고, 여러 문제를 ‘조용한 실패’라는 공통점으로 묶어낸 점이 좋습니다. 특히 최종 본문을 민감값 게이트가 검사하도록 순서를 잡은 것도 설계 의도가 분명합니다.
+
+    다음에는 서명 검증 실패나 규칙노트 누락처럼 겉으로 드러나지 않는 결과를 별도 지표로 남겨, 같은 유형의 실패를 더 빨리 찾을 수 있는지 살펴보면 좋겠습니다.
+  sig: 7af040df5ffe0f52a8b6604edb789d2dce2a57e8b1d0d91a7953b641f005f05d
+ai_turn_count: 1
